@@ -1,0 +1,16 @@
+﻿Build started 2019/1/14 9:49:23.
+     1>Project "C:\Users\root\Desktop\program\C++\data structure\LInerList_chain\LInerList_chain\LInerList_chain.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         E:\VS2013\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W1 /WX- /O2 /Gm- /EHsc /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt Source\Function.cpp
+     1>cl : Command line warning D9038: /ZI is not supported on this platform; enabling /Zi instead
+         Function.cpp
+       Link:
+         E:\VS2013\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\root\Desktop\program\C++\data structure\LInerList_chain\x64\Debug\LInerList_chain.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\root\Desktop\program\C++\data structure\LInerList_chain\x64\Debug\LInerList_chain.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\root\Desktop\program\C++\data structure\LInerList_chain\x64\Debug\LInerList_chain.lib" /MACHINE:X64 x64\Debug\LInerList_chain.obj
+         x64\Debug\Function.obj
+         x64\Debug\stdafx.obj
+         LInerList_chain.vcxproj -> C:\Users\root\Desktop\program\C++\data structure\LInerList_chain\x64\Debug\LInerList_chain.exe
+     1>Done Building Project "C:\Users\root\Desktop\program\C++\data structure\LInerList_chain\LInerList_chain\LInerList_chain.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.75

@@ -1,0 +1,15 @@
+﻿Build started 2019/1/21 14:40:07.
+     1>Project "C:\Users\root\Desktop\program\C++\data structure\StaticList\StaticList2\StaticList2\StaticList2.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         E:\VS2013\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt ..\Source\Function.cpp
+         Function.cpp
+       Link:
+         E:\VS2013\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\root\Desktop\program\C++\data structure\StaticList\StaticList2\x64\Debug\StaticList2.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\Users\root\Desktop\program\C++\data structure\StaticList\StaticList2\x64\Debug\StaticList2.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\root\Desktop\program\C++\data structure\StaticList\StaticList2\x64\Debug\StaticList2.lib" /MACHINE:X64 x64\Debug\Function.obj
+         x64\Debug\StaticList2.obj
+         x64\Debug\stdafx.obj
+         StaticList2.vcxproj -> C:\Users\root\Desktop\program\C++\data structure\StaticList\StaticList2\x64\Debug\StaticList2.exe
+     1>Done Building Project "C:\Users\root\Desktop\program\C++\data structure\StaticList\StaticList2\StaticList2\StaticList2.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.54

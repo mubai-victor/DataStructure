@@ -1,0 +1,13 @@
+﻿  Queue.cpp
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(33): warning C4477: “printf”: 格式字符串“%u”需要类型“unsigned int”的参数，但可变参数 1 拥有了类型“QueuePtr”
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(33): warning C4313: “printf”: 格式字符串中的“%u”与“QueuePtr”类型的参数 1 冲突
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(33): warning C4477: “printf”: 格式字符串“%u”需要类型“unsigned int”的参数，但可变参数 2 拥有了类型“QueuePtr”
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(33): warning C4313: “printf”: 格式字符串中的“%u”与“QueuePtr”类型的参数 2 冲突
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(33): warning C4477: “printf”: 格式字符串“%u”需要类型“unsigned int”的参数，但可变参数 3 拥有了类型“QNode *”
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(33): warning C4313: “printf”: 格式字符串中的“%u”与“QNode *”类型的参数 3 冲突
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(35): warning C4477: “printf”: 格式字符串“%u”需要类型“unsigned int”的参数，但可变参数 1 拥有了类型“QueuePtr”
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(35): warning C4313: “printf”: 格式字符串中的“%u”与“QueuePtr”类型的参数 1 冲突
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(35): warning C4477: “printf”: 格式字符串“%u”需要类型“unsigned int”的参数，但可变参数 2 拥有了类型“QueuePtr”
+c:\users\administrator\desktop\program\c++\data structure\queue\queue\queue\queue.cpp(35): warning C4313: “printf”: 格式字符串中的“%u”与“QueuePtr”类型的参数 2 冲突
+  Queue.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Queue\Queue\x64\Debug\Queue.exe
+  Queue.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Queue\Queue\x64\Debug\Queue.pdb (Full PDB)

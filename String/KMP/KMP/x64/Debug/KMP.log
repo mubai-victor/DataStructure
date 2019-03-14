@@ -1,0 +1,4 @@
+﻿  Function.cpp
+c:\users\administrator\desktop\program\c++\data structure\string\kmp\source\function.cpp(16): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  KMP.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\KMP\x64\Debug\KMP.exe
+  KMP.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\KMP\x64\Debug\KMP.pdb (Full PDB)

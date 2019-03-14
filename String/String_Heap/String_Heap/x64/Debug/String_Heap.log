@@ -1,0 +1,4 @@
+﻿  Function.cpp
+c:\users\administrator\desktop\program\c++\data structure\string\string_heap\source\function.cpp(15): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  String_Heap.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\String_Heap\x64\Debug\String_Heap.exe
+  String_Heap.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\String_Heap\x64\Debug\String_Heap.pdb (Full PDB)

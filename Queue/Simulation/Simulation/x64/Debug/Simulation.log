@@ -1,0 +1,9 @@
+﻿  Function_List.cpp
+  正在生成代码...
+  正在编译...
+  Simulation.cpp
+c:\users\administrator\desktop\program\c++\data structure\queue\simulation\simulation\simulation.cpp(12): warning C4244: “参数”: 从“time_t”转换到“unsigned int”，可能丢失数据
+  Function_Queue.cpp
+  正在生成代码...
+  Simulation.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Queue\Simulation\x64\Debug\Simulation.exe
+  Simulation.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Queue\Simulation\x64\Debug\Simulation.pdb (Full PDB)

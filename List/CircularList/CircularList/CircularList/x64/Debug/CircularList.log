@@ -1,0 +1,15 @@
+﻿Build started 2019/1/21 17:19:03.
+     1>Project "C:\Users\root\Desktop\program\C++\data structure\CircularList\CircularList\CircularList\CircularList.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         E:\VS2013\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W1 /WX- /O2 /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt CircularList.cpp
+         CircularList.cpp
+       Link:
+         E:\VS2013\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\root\Desktop\program\C++\data structure\CircularList\CircularList\x64\Debug\CircularList.exe" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:\Users\root\Desktop\program\C++\data structure\CircularList\CircularList\x64\Debug\CircularList.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\root\Desktop\program\C++\data structure\CircularList\CircularList\x64\Debug\CircularList.lib" /MACHINE:X64 x64\Debug\Function.obj
+         x64\Debug\CircularList.obj
+         x64\Debug\stdafx.obj
+         CircularList.vcxproj -> C:\Users\root\Desktop\program\C++\data structure\CircularList\CircularList\x64\Debug\CircularList.exe
+     1>Done Building Project "C:\Users\root\Desktop\program\C++\data structure\CircularList\CircularList\CircularList\CircularList.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.31

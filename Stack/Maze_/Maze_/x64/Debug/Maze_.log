@@ -1,0 +1,4 @@
+﻿  Function.cpp
+c:\users\administrator\desktop\program\c++\data structure\stack\maze_\source\function.cpp(57): warning C4244: “return”: 从“__int64”转换到“int”，可能丢失数据
+  Maze_.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Maze_\x64\Debug\Maze_.exe
+  Maze_.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Maze_\x64\Debug\Maze_.pdb (Full PDB)

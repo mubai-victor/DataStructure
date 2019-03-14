@@ -1,0 +1,9 @@
+﻿  Function.cpp
+..\Source\Function.cpp(16): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  KMP.cpp
+KMP.cpp(11): warning C4101: “p”: 未引用的局部变量
+  正在生成代码
+  All 22 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+  KMP.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\KMP\x64\Release\KMP.exe
+  KMP.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\KMP\x64\Release\KMP.pdb (Full PDB)
