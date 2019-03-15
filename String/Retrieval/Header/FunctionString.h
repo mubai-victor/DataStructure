@@ -7,6 +7,7 @@
 #define MaxKeyNum 25
 #define MaxLineLen 52
 #define MaxNoIdx 10
+#define MaxBookNum 10
 class SString {
 public:
 	int length;
@@ -51,7 +52,7 @@ public:
 
 
 class IdxListType {//Ë÷Òý±í
-private:
+public:
 	IdxTermType item[MaxKeyNum];
 	int length;
 public:
@@ -63,4 +64,17 @@ public:
 	void PutText(FILE *p);
 };
 
+
+class BookTermType {
+public:
+	char bookname[MaxLineLen + 1];
+	int bookno;
+};
+
+
+class BookListType {
+public:
+	BookTermType item[MaxBookNum];
+	int length;
+};
 #endif
