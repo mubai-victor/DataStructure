@@ -1,6 +1,0 @@
-﻿  Hanoi.cpp
-c:\users\administrator\desktop\program\c++\data structure\stack\hanoi\hanoi\hanoi.cpp(14): warning C4477: “printf”: 格式字符串“%d”需要类型“int”的参数，但可变参数 1 拥有了类型“unsigned __int64”
-  c:\users\administrator\desktop\program\c++\data structure\stack\hanoi\hanoi\hanoi.cpp(14): note: 请考虑在格式字符串中使用“%lld”
-  c:\users\administrator\desktop\program\c++\data structure\stack\hanoi\hanoi\hanoi.cpp(14): note: 请考虑在格式字符串中使用“%I64d”
-  Hanoi.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Hanoi\Debug\Hanoi.exe
-  Hanoi.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Hanoi\Debug\Hanoi.pdb (Full PDB)

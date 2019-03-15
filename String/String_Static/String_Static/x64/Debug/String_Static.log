@@ -1,5 +1,0 @@
-﻿  Function.cpp
-c:\users\administrator\desktop\program\c++\data structure\string\string_static\source\function.cpp(12): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-c:\users\administrator\desktop\program\c++\data structure\string\string_static\source\function.cpp(90): warning C4101: “k”: 未引用的局部变量
-  String_Static.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\String_Static\x64\Debug\String_Static.exe
-  String_Static.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\String_Static\x64\Debug\String_Static.pdb (Full PDB)

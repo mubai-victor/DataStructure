@@ -1,8 +1,0 @@
-﻿  Retrieval.cpp
-  FunctionString.cpp
-c:\users\administrator\desktop\program\c++\data structure\string\retrieval\source\functionstring.cpp(20): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
-c:\users\administrator\desktop\program\c++\data structure\string\retrieval\source\functionstring.cpp(189): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-c:\users\administrator\desktop\program\c++\data structure\string\retrieval\source\functionstring.cpp(249): warning C4101: “status”: 未引用的局部变量
-  正在生成代码...
-  Retrieval.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\Retrieval\x64\Debug\Retrieval.exe
-  Retrieval.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\String\Retrieval\x64\Debug\Retrieval.pdb (Full PDB)

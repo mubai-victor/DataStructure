@@ -1,6 +1,0 @@
-﻿  Function.cpp
-c:\users\administrator\desktop\program\c++\data structure\stack\calculator\source\function.cpp(39): warning C4244: “return”: 从“__int64”转换到“int”，可能丢失数据
-c:\users\administrator\desktop\program\c++\data structure\stack\calculator\source\function.cpp(90): warning C4715: “Getcur”: 不是所有的控件路径都返回值
-c:\users\administrator\desktop\program\c++\data structure\stack\calculator\source\function.cpp(120): warning C4715: “Operate”: 不是所有的控件路径都返回值
-  Calculator.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Calculator\x64\Debug\Calculator.exe
-  Calculator.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Calculator\x64\Debug\Calculator.pdb (Full PDB)

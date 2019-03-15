@@ -1,4 +1,0 @@
-﻿  Function.cpp
-c:\users\administrator\desktop\program\c++\data structure\stack\bracket\source\function.cpp(29): warning C4244: “return”: 从“__int64”转换到“int”，可能丢失数据
-  Bracket.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Bracket\x64\Debug\Bracket.exe
-  Bracket.vcxproj -> C:\Users\Administrator\Desktop\program\C++\data structure\Stack\Bracket\x64\Debug\Bracket.pdb (Full PDB)
