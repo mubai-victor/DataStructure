@@ -19,13 +19,13 @@ public:
 	TSMatrix();
 	Status CreateSMatrix(char *FileName);
 	void DestroySMatrix();
-	void PrintSMatrixl();
+	void PrintSMatrix1();
 	void PrintSMatrix();
-	void CopySMatrix();
-	Status AddSMatrix(TSMatrix&M);
-	Status SubSMatrix(TSMatrix&M);
+	void CopySMatrix(TSMatrix&M);
+	Status AddSMatrix(TSMatrix M, TSMatrix&R);
+	Status SubSMatrix(TSMatrix M, TSMatrix&R);
 	Status MultSMatrix(TSMatrix M, TSMatrix &R);
-	Status TransposeSMatrix(TSMatrix &R);
+	void TransposeSMatrix(TSMatrix &R);
 	friend int compare(int iR, int iL);
 };
 
