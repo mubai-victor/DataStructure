@@ -39,6 +39,12 @@ int main()
 	A.MultSMatrix(B,C);
 	printf("æÿ’ÛC5(A°¡B):\n");
 	C.PrintSMatrix1();
+	cout << "æÿ’ÛB£∫" << endl;
+	B.PrintSMatrix1();
+	A.DestroySMatrix();
+	B.FastTransposeSMatrix(A);
+	cout << "æÿ’ÛBµƒ◊™÷√£∫" << endl;
+	A.PrintSMatrix1();
     return 0;
 }
 

@@ -204,6 +204,41 @@ void TSMatrix::TransposeSMatrix(TSMatrix &R)//当前矩阵转置得到矩阵R
 		}
 	}
 }
+void TSMatrix::FastTransposeSMatrix(TSMatrix &R)//快速转置矩阵
+{
+	ElemType *eCpot = NULL, *eColumn = NULL;
+	int iColumn = 0, iCur = 0;
+	R.num = num;
+	R.column = row;
+	R.row = column;
+	eCpot = new ElemType[column + 1];
+	eColumn = new ElemType[column + 1];
+	if (!eCpot || !eColumn)
+		exit(0);
+	for (int iPos = 1; iPos <= column; iPos++) {
+		eCpot[iPos] = 0;
+		eColumn[iPos] = 0;
+	}
+	for (int iPos = 1; iPos <= num; iPos++) {
+		++eColumn[data[iPos].j];
+	}
+	eCpot[1] = 1;
+	for (int iPos = 2; iPos <= column; iPos++) {
+		eCpot[iPos] = eCpot[iPos - 1] + eColumn[iPos - 1];
+	}
+	for (int iPos = 1; iPos <= num; iPos++) {
+		iColumn = data[iPos].j;
+		iCur = eCpot[iColumn];
+		R.data[iCur].elem = data[iPos].elem;
+		R.data[iCur].i = data[iPos].j;
+		R.data[iCur].j = data[iPos].i;
+		++eCpot[iColumn];
+	}
+	delete[] eCpot;
+	delete[] eColumn;
+}
+
+
 int compare(int iR, int iL) {
 	return (iR - iL) == 0 ? 0 : ((iR - iL) > 0 ? 1 : -1);
 }

@@ -26,6 +26,7 @@ public:
 	Status SubSMatrix(TSMatrix M, TSMatrix&R);
 	Status MultSMatrix(TSMatrix M, TSMatrix &R);
 	void TransposeSMatrix(TSMatrix &R);
+	void FastTransposeSMatrix(TSMatrix &R);
 	friend int compare(int iR, int iL);
 };
 
