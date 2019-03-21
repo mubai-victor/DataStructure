@@ -48,6 +48,23 @@ Status TSMatrix::CreateSMatrix(char *FileName)//´ÓÎÄ¼şFileNameÖĞ¶ÁÈ¡ÄÚÈİÀ´´´½¨¾Ø
 		}
 	}
 	fclose(pF);
+	for (int iPos = 0; iPos <= row; iPos++) {
+		rpos[iPos] = 0;
+	}
+	for(int iRow=1;iRow<=row;iRow++){
+		for (int iPos = 0; iPos <= num; iPos++) {
+			if (data[iPos].i == iRow) {
+				rpos[iRow]++;
+			}
+		}
+	}
+	
+	for (int iRow = row; iRow >= 1; iRow--) {	
+		rpos[iRow] = 1;
+		for (int iPos = 1; iPos < iRow; iPos++) {
+			rpos[iRow] += rpos[iPos];
+		}
+	}
 	return OK;
 }
 void TSMatrix::DestroySMatrix()//Ïú»Ù¾ØÕó
@@ -87,49 +104,52 @@ void TSMatrix::PrintSMatrix()//°´Ô­Ñù´òÓ¡³öÀ´¾ØÕó
 void TSMatrix::CopySMatrix(TSMatrix&M)//½«µ±Ç°¾ØÕóµÄÄÚÈİ¸´ÖÆµ½¾ØÕóMÖĞ
 {
 	memcpy(M.data, data, (num+1)*sizeof(Triple)); 
+	memcpy(M.rpos, rpos, (row+1)*sizeof(int)); 
 	M.row = row;
 	M.column = column;
 	M.num = num;
 }
 Status TSMatrix::AddSMatrix(TSMatrix M, TSMatrix&R)//¾ØÕóR·µ»Ø¾ØÕóMºÍ±¾¾ØÕóµÄÏà¼ÓÖ®ºÍ
 {
-	int iPosT = 1, iPosR = 1, iPosM = 1;
+	int iPosR = 1;
 	if (M.row != row || M.column != column)
 		return ERROR;
-	while(iPosT<=num&&iPosM<=M.num){
-		switch (compare(data[iPosT].i, M.data[iPosM].i)) {
-		case 0: 
-			switch (compare(data[iPosT].j, M.data[iPosM].j)) {
-			case 0:
-				R.data[iPosR].i = data[iPosT].i;
-				R.data[iPosR].j = data[iPosT].j;
-				R.data[iPosR].elem = data[iPosT].elem + M.data[iPosM].elem;
-				if (0 == R.data[iPosR].elem) {
-					iPosR--;
-				}
-				iPosT++;
-				iPosM++;
-				iPosR++;
-				break;
-			case -1:
-				R.data[iPosR++] = M.data[iPosM++];
-				break;
-			case 1:
-				R.data[iPosR++] = M.data[iPosT++];
-			}			
-			break;
-		case -1:
-			R.data[iPosR++] = M.data[iPosM++];
-			break;
-		case 1:
-			R.data[iPosR++] = M.data[iPosT++];		
+	for (int iRow = 1; iRow <= row; iRow++) {
+		int iStartT = rpos[iRow], iStartM = M.rpos[iRow];
+		int iEndT = 0, iEndM = 0;
+		R.rpos[iRow] = iPosR;
+		if (iRow == row) {
+			iEndT = num + 1;
+			iEndM = M.num + 1;
 		}
-	}
-	while (iPosT <= num) {
-		R.data[iPosR++] = data[iPosT++];
-	}
-	while (iPosM <= M.num) {
-		R.data[iPosR++] = M.data[iPosM++];
+		else {
+			iEndT = rpos[iRow + 1];
+			iEndM = M.rpos[iRow + 1];
+		}
+		while(iStartT < iEndT && iStartM < iEndM){
+			if (data[iStartT].j == M.data[iStartM].j) {
+				if (0 != data[iStartT].elem + M.data[iStartM].elem) {
+					R.data[iPosR].elem = data[iStartT].elem + M.data[iStartM].elem;
+					R.data[iPosR].i = data[iStartT].i;
+					R.data[iPosR].j = data[iStartT].j;
+					iPosR++;
+				}
+				iStartT++;
+				iStartM++;
+			}
+			else if (data[iStartT].j < M.data[iStartM].j) {
+				R.data[iPosR++] = data[iStartT++];
+			}
+			else {
+				R.data[iPosR++] = M.data[iStartM++];
+			}
+		}
+		while (iStartT < iEndT) {
+			R.data[iPosR++] = data[iStartT++];
+		}
+		while (iStartM < iEndM) {
+			R.data[iPosR++] = M.data[iStartM++];
+		}
 	}
 	R.num = iPosR - 1;
 	R.row = row;
@@ -142,7 +162,6 @@ Status TSMatrix::SubSMatrix(TSMatrix M, TSMatrix&R)//R¾ØÕó·µ»Øµ±Ç°¾ØÕó¼õM¾ØÕóµÄ²
 {
 	for (int iPos = 1; iPos <= M.num; iPos++) {
 		M.data[iPos].elem *= -1;
-		AddSMatrix(M, R);
 	}
 	return AddSMatrix(M, R);
 }
@@ -153,36 +172,48 @@ Status TSMatrix::MultSMatrix(TSMatrix M, TSMatrix &R)//R¾ØÕó·µ»Øµ±Ç°¾ØÕóºÍM¾ØÕóµ
 	R.row = row;
 	R.column = M.column;
 	R.num = 0;
+	int iStartT = 0, iStartM = 0; 
+	int iEndT = 0, iEndM = 0;
+	int iPosR = 1;
 	ElemType *epResult = new ElemType[R.column + 1];
-	ElemType *epRow = new ElemType[column + 1];
-	for (int iPos = 1; iPos <= R.column; iPos++) {
-		for (int iTemp = 0; iTemp <= R.column; iTemp++) {
-			epResult[iTemp] = 0;
+	for (int iRow = 1; iRow <= row; iRow++) {		
+		for (int iPos = 0; iPos <= M.column; iPos++) {
+			epResult[iPos] = 0;
 		}
-		for (int iTemp = 0; iTemp <= column; iTemp++) {
-			epRow[iTemp] = 0;
+		iStartT = rpos[iRow];
+		if (iRow == row) {
+			iEndT = num + 1;
 		}
-		epResult[0]; epResult[1]; epResult[2]; epResult[3];
-		epRow[0]; epRow[1]; epRow[2]; epRow[3];
-		for (int iTemp = 1; iTemp <= num; iTemp++) {
-			if (data[iTemp].i == iPos)
-				epRow[data[iTemp].j] = data[iTemp].elem;
+		else {
+			iEndT = rpos[iRow + 1];
 		}
-		for (int iTemp = 1; iTemp <= M.num; iTemp++) {
-			epResult[M.data[iTemp].j] = epRow[M.data[iTemp].i] * M.data[iTemp].elem;
+		while (iStartT < iEndT) {
+			int iCol = data[iStartT].j;
+			iStartM = M.rpos[iCol];
+			if (iCol == M.row) {
+				iEndM = M.num + 1;
+			}
+			else {
+				iEndM = M.rpos[iCol + 1];
+			}
+			while (iStartM < iEndM) {
+				epResult[M.data[iStartM].j] += data[iStartT].elem * M.data[iStartM].elem;
+				iStartM++;
+			}
+			iStartT++;
 		}
-		for (int iTemp = 1; iTemp <= R.column; iTemp++) {
-			if (epResult[iTemp]) {
-				R.num++;
-				R.data[R.num].elem = epResult[iTemp];
-				R.data[R.num].i = iPos;
-				R.data[R.num].j = iTemp;
-				
+		R.rpos[iRow] = iPosR;
+		for (int iPos = 0; iPos < row; iPos++) {
+			if (epResult[iPos] != 0) {
+				R.data[iPosR].elem = epResult[iPos];
+				R.data[iPosR].i = iRow;
+				R.data[iPosR].j = iPos;
+				iPosR++;
 			}
 		}
 	}
+	R.num = iPosR - 1;
 	delete[] epResult;
-	delete[] epRow;
 	if (R.num > MAX_SIZE)
 		return ERROR;
 	return OK;
@@ -192,53 +223,30 @@ void TSMatrix::TransposeSMatrix(TSMatrix &R)//µ±Ç°¾ØÕó×ªÖÃµÃµ½¾ØÕóR
 	R.num = num;
 	R.column = row;
 	R.row = column;
-	int iTotal = 1;
-	for (int iPos = 1; iPos <= R.row; iPos++) {
-		for (int iTemp = 1; iTemp <= num;iTemp++) {
-			if (data[iTemp].j == iPos) {
-				R.data[iTotal].elem = data[iTemp].elem;
-				R.data[iTotal].i = data[iTemp].j;
-				R.data[iTotal].j = data[iTemp].i;
-				iTotal++;
-			}
+	int iTotal = 1, iRow = 1;
+	int *ipTemp = new int[R.row];
+	for (int iPos = 0; iPos <= R.row;iPos++) {
+		R.rpos[iPos] = 0;
+	}
+	for (int iPos = 1; iPos <= num; iPos++) {
+		R.rpos[data[iPos].j]++;
+	}
+
+	for (int iRow = R.row; iRow >= 1; iRow--) {
+		R.rpos[iRow] = 1;
+		for (int iPos = 1; iPos < iRow; iPos++) {
+			R.rpos[iRow] += R.rpos[iPos];
 		}
 	}
-}
-void TSMatrix::FastTransposeSMatrix(TSMatrix &R)//¿ìËÙ×ªÖÃ¾ØÕó
-{
-	ElemType *eCpot = NULL, *eColumn = NULL;
-	int iColumn = 0, iCur = 0;
-	R.num = num;
-	R.column = row;
-	R.row = column;
-	eCpot = new ElemType[column + 1];
-	eColumn = new ElemType[column + 1];
-	if (!eCpot || !eColumn)
-		exit(0);
-	for (int iPos = 1; iPos <= column; iPos++) {
-		eCpot[iPos] = 0;
-		eColumn[iPos] = 0;
+	for (int iPos = 1; iPos <= R.row; iPos++) {
+		ipTemp[iPos] = R.rpos[iPos];
 	}
-	for (int iPos = 1; iPos <= num; iPos++) {
-		++eColumn[data[iPos].j];
+	for (int iPos = 1; iPos <= num; iPos++) { 
+		R.data[ipTemp[data[iPos].j]].elem = data[iPos].elem;
+		R.data[ipTemp[data[iPos].j]].i = data[iPos].j;
+		R.data[ipTemp[data[iPos].j]].j = data[iPos].i;
+		++ipTemp[data[iPos].j];
 	}
-	eCpot[1] = 1;
-	for (int iPos = 2; iPos <= column; iPos++) {
-		eCpot[iPos] = eCpot[iPos - 1] + eColumn[iPos - 1];
-	}
-	for (int iPos = 1; iPos <= num; iPos++) {
-		iColumn = data[iPos].j;
-		iCur = eCpot[iColumn];
-		R.data[iCur].elem = data[iPos].elem;
-		R.data[iCur].i = data[iPos].j;
-		R.data[iCur].j = data[iPos].i;
-		++eCpot[iColumn];
-	}
-	delete[] eCpot;
-	delete[] eColumn;
 }
 
 
-int compare(int iR, int iL) {
-	return (iR - iL) == 0 ? 0 : ((iR - iL) > 0 ? 1 : -1);
-}

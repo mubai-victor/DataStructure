@@ -4,6 +4,7 @@
 #include "stdarg.h"
 
 #define MAX_SIZE	100
+#define MAX_RC	20
 
 struct Triple {
 	int i, j;
@@ -15,6 +16,7 @@ class TSMatrix{
 private:
 	Triple data[MAX_SIZE + 1];
 	int row, column, num;
+	int rpos[MAX_RC + 1];
 public:
 	TSMatrix();
 	Status CreateSMatrix(char *FileName);
@@ -26,11 +28,8 @@ public:
 	Status SubSMatrix(TSMatrix M, TSMatrix&R);
 	Status MultSMatrix(TSMatrix M, TSMatrix &R);
 	void TransposeSMatrix(TSMatrix &R);
-	void FastTransposeSMatrix(TSMatrix &R);
-	friend int compare(int iR, int iL);
 };
 
-int compare(int iR, int iL);
 
 
 #endif
