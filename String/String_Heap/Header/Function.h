@@ -3,6 +3,7 @@
 
 #include "Test.h"
 #define DestroyString ClearString
+
 class SString {
 private:
 	int length;
@@ -23,4 +24,5 @@ public:
 	Status Replace(SString &S, SString &T);
 	void StrPrint();
 };
+
 #endif
