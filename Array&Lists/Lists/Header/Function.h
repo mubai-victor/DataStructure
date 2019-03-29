@@ -5,7 +5,7 @@
 #define DestroyString ClearString
 #define MAX_SIZE 100
 
-enum ElemTag { ATOM, LIST };
+enum ElemTag { ATOM, LIST, HEAD };
 
 
 class SString {
@@ -33,6 +33,9 @@ public:
 void sever(SString &str, SString &hstr);
 void visit(AtomType elem);
 
+class GLNode;
+typedef GLNode GList;
+
 class GLNode {
 public:
 	ElemTag tag;
@@ -44,12 +47,6 @@ public:
 	};	
 public:
 	GLNode();
-};
-class GList {
-private:
-	GLNode *ptr;
-public:
-	GList();
 	void CreateGList(char* FileName);
 	void CreateListSub(SString str);
 	void DestroyGList();
@@ -62,6 +59,7 @@ public:
 	void InsertFirst_GL(GList elem);
 	void DeleteFirst_GL(GList &elem);
 	void Traverse_GL(void(*func)(AtomType atom));
+
 };
 #endif
 

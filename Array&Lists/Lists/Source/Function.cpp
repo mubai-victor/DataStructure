@@ -170,7 +170,234 @@ GLNode::GLNode()
 	head = tail = NULL;
 }
 
-void GList::CreateGList(char* FileName)
+//void GList::CreateGList(char* FileName)
+//{
+//	int iPos = 1;
+//	FILE*pF = NULL;
+//	errno_t status;
+//	SString Sstr,Ssub,Sbracket;
+//	GLNode *Gtemp = NULL;
+//	status = fopen_s(&pF, FileName, "r");
+//	if (status != 0) {
+//		cout << "无法打开文件" << FileName << endl;
+//		exit(0);
+//	}
+//	fgets(buf, MAX_SIZE, pF);
+//	buf[strlen(buf) - 1] = '\0';
+//	Sstr.StrAssign(buf);
+//	ptr = new GLNode;
+//	ptr->tag = LIST;
+//	CreateListSub(Sstr);
+//	Gtemp = ptr->head->head;
+//	delete ptr->head;
+//	ptr->head = Gtemp;
+//	fclose(pF);
+//}
+//void GList::CreateListSub(SString str)
+//{
+//	SString Ssub, Sbracket,Sstr;
+//	GList Shead, Stail;
+//	GLNode *Gtemp = NULL;
+//	Sbracket.StrAssign("()");
+//	if (!str.StrCompare(Sbracket)) {
+//		delete ptr;
+//		ptr = NULL;
+//	}
+//	else {		
+//		ptr->head = new GLNode;
+//		if (str.StrLength() == 1) {
+//			Gtemp = ptr->head;
+//			Gtemp->tag = ATOM;
+//			Gtemp->atom = str.str[0];
+//		}
+//		else {
+//			ptr->head->tag = LIST;
+//			Gtemp = ptr;
+//			Shead.ptr = Gtemp->head;
+//			str.SubString(Sstr, 2, str.StrLength() - 2); 
+//			do {
+//				sever(Sstr, Ssub);
+//				Shead.CreateListSub(Ssub);
+//				if (Sstr.StrLength() != 0) {
+//					Gtemp->tail = new GLNode;
+//					Gtemp = Gtemp->tail;
+//					Gtemp->tag = LIST;
+//					Shead.ptr = Gtemp;
+//				}
+//			} while (Sstr.StrLength() != 0);
+//			Gtemp->tail = NULL;
+//		}
+//	}
+//}
+//void GList::DestroyGList()
+//{
+//	GList Ghead, Gtail;
+//	if (ptr != NULL) {
+//		if (ptr->tag == LIST) {
+//			Ghead.ptr = ptr->head;
+//			Ghead.DestroyGList();
+//			Gtail.ptr = ptr->tail;
+//			Gtail.DestroyGList();
+//		}
+//	}
+//	delete ptr;
+//	ptr = NULL;
+//}
+//void GList::CopyGList(GList &R)
+//{
+//	GList Ghead, Gtail;
+//	GList Rhead, Rtail;
+//	if (ptr == NULL) {
+//		R.ptr = NULL;
+//	}
+//	else {
+//		R.ptr = new GLNode;
+//		R.ptr->tag = ptr->tag;
+//		if (ptr->tag == LIST) {
+//			Ghead.ptr = ptr->head;
+//			Gtail.ptr = ptr->tail;
+//			Rhead.ptr = R.ptr->head;
+//			Rtail.ptr = R.ptr->tail;
+//			Ghead.CopyGList(Rhead);
+//			Gtail.CopyGList(Rtail);
+//		}
+//		else {
+//			R.ptr->atom = ptr->atom;
+//		}
+//	}
+//}
+//int GList::GListLength()
+//{
+//	int iLen = 0;
+//	GLNode *Gtemp = ptr;
+//	while (Gtemp) {
+//		Gtemp = Gtemp->tail;
+//		iLen++;
+//	}
+//	return iLen;
+//}
+//int GList::GListDepth() {
+//	int iDepth = 0, iMax = 0;
+//	GList Gnext,Gtail;
+//	Gnext.ptr = Gtail.ptr = ptr;
+//	if (ptr == NULL) {
+//		return 1;
+//	}
+//	else if (ptr->tag == ATOM) {
+//		return 0;
+//	}
+//	while (Gtail.ptr != NULL) {
+//		Gnext.ptr = Gtail.ptr->head;
+//		iMax = Gnext.GListDepth();
+//		if (iMax > iDepth)
+//			iDepth = iMax;
+//		Gtail.ptr = Gtail.ptr->tail;
+//	}
+//	return iDepth + 1;
+//}
+//Status GList::GListEmpty()
+//{
+//	if (ptr == NULL)
+//		return TRUE;
+//	else
+//		return FALSE;
+//}
+//GList GList::GetHead()
+//{
+//	GList R,Gtemp;
+//	if (ptr == NULL) {
+//		R.ptr = NULL;
+//	}
+//	else {
+//		Gtemp.ptr = ptr->head;
+//		Gtemp.CopyGList(R);
+//	}
+//	return R;
+//}
+//GList GList::GetTail()
+//{
+//	GList R,Gtemp;
+//	if (ptr == NULL) {
+//		R.ptr = NULL;
+//	}
+//	else {
+//		Gtemp.ptr = ptr->tail;
+//		Gtemp.CopyGList(R);
+//	}
+//	return R;
+//}
+//void GList::InsertFirst_GL(GList elem)
+//{
+//	GList Gtemp;
+//	Gtemp.ptr = new GLNode;
+//	Gtemp.ptr->tag = LIST;
+//	Gtemp.ptr->head = elem.ptr;
+//	Gtemp.ptr->tail = ptr;
+//	ptr = Gtemp.ptr;
+//}
+//void GList::DeleteFirst_GL(GList &elem)
+//{
+//	GList Gtemp;
+//	Gtemp.ptr = ptr->head;
+//	Gtemp.CopyGList(elem);
+//	ptr = ptr->tail;
+//}
+//void GList::Traverse_GL(void(*func)(AtomType atom))
+//{
+//	GList Ghead, Gtail;
+//	if (ptr != NULL) {
+//		if (ptr->tag == ATOM) {
+//			func(ptr->atom);
+//		}
+//		else {
+//			Ghead.ptr = ptr->head;
+//			Gtail.ptr = ptr->tail;
+//			Ghead.Traverse_GL(func);
+//			Gtail.Traverse_GL(func);
+//		}
+//	}
+//}
+//GList::GList()
+//{
+//	ptr = NULL;
+//}
+//
+//void sever(SString &str, SString &hstr)
+//{
+//	SString SBracketL, SBracketR, SComma, SJudge, STemp;
+//	int iBracketNum = 0, iLength = 0, iLoop = 1;
+//	SBracketL.StrAssign("(");
+//	SBracketR.StrAssign(")");
+//	SComma.StrAssign(",");
+//	iLength = str.StrLength();	
+//	do {
+//		str.SubString(SJudge, iLoop, 1);
+//		if (!SJudge.StrCompare(SBracketL)) {
+//			iBracketNum++;
+//		}
+//		else if (!SJudge.StrCompare(SBracketR)) {
+//			iBracketNum--;
+//		}
+//		iLoop++;
+//	} while ((iLoop <= iLength) && (SJudge.StrCompare(SComma) || iBracketNum));
+//	if (iLoop <= iLength) {
+//		str.SubString(hstr, 1, iLoop - 2);
+//		str.SubString(STemp, iLoop, iLength - iLoop + 1);
+//		str.StrCopy(STemp);
+//	}
+//	else {
+//		hstr.StrCopy(str);
+//		str.ClearString();
+//	}
+//}
+
+
+
+void visit(AtomType elem)
+{
+	cout << elem << ends;
+}
+void GLNode::CreateGList(char* FileName)
 {
 	int iPos = 1;
 	FILE*pF = NULL;
@@ -185,181 +412,183 @@ void GList::CreateGList(char* FileName)
 	fgets(buf, MAX_SIZE, pF);
 	buf[strlen(buf) - 1] = '\0';
 	Sstr.StrAssign(buf);
-	ptr = new GLNode;
-	ptr->tag = LIST;
 	CreateListSub(Sstr);
-	Gtemp = ptr->head->head;
-	delete ptr->head;
-	ptr->head = Gtemp;
 	fclose(pF);
 }
-void GList::CreateListSub(SString str)
+void GLNode::CreateListSub(SString str)
 {
 	SString Ssub, Sbracket,Sstr;
 	GList Shead, Stail;
 	GLNode *Gtemp = NULL;
 	Sbracket.StrAssign("()");
 	if (!str.StrCompare(Sbracket)) {
-		delete ptr;
-		ptr = NULL;
+		head = NULL;
 	}
 	else {		
-		ptr->head = new GLNode;
+		head = new GLNode;
 		if (str.StrLength() == 1) {
-			Gtemp = ptr->head;
-			Gtemp->tag = ATOM;
-			Gtemp->atom = str.str[0];
+			head->tag = ATOM;
+			head->atom = str.str[0];
 		}
 		else {
-			ptr->head->tag = LIST;
-			Gtemp = ptr;
-			Shead.ptr = Gtemp->head;
+			head->tag = LIST;
+			Gtemp = head;
 			str.SubString(Sstr, 2, str.StrLength() - 2); 
 			do {
 				sever(Sstr, Ssub);
-				Shead.CreateListSub(Ssub);
+				Gtemp->CreateListSub(Ssub);
 				if (Sstr.StrLength() != 0) {
 					Gtemp->tail = new GLNode;
 					Gtemp = Gtemp->tail;
 					Gtemp->tag = LIST;
-					Shead.ptr = Gtemp;
 				}
 			} while (Sstr.StrLength() != 0);
 			Gtemp->tail = NULL;
 		}
 	}
 }
-void GList::DestroyGList()
+void GLNode::DestroyGList()
 {
-	GList Ghead, Gtail;
-	if (ptr != NULL) {
-		if (ptr->tag == LIST) {
-			Ghead.ptr = ptr->head;
-			Ghead.DestroyGList();
-			Gtail.ptr = ptr->tail;
-			Gtail.DestroyGList();
+	if (head != NULL) {
+		if (head->tag == LIST) {
+			head->DestroyGList();
+			if(tail != NULL)
+				tail->DestroyGList();
 		}
+		delete head;
+		head = NULL;
 	}
-	delete ptr;
-	ptr = NULL;
 }
-void GList::CopyGList(GList &R)
+void GLNode::CopyGList(GList &R)
 {
-	GList Ghead, Gtail;
-	GList Rhead, Rtail;
-	if (ptr == NULL) {
-		R.ptr = NULL;
-	}
-	else {
-		R.ptr = new GLNode;
-		R.ptr->tag = ptr->tag;
-		if (ptr->tag == LIST) {
-			Ghead.ptr = ptr->head;
-			Gtail.ptr = ptr->tail;
-			Rhead.ptr = R.ptr->head;
-			Rtail.ptr = R.ptr->tail;
-			Ghead.CopyGList(Rhead);
-			Gtail.CopyGList(Rtail);
+	GLNode *pNext = head; &R;
+	if (head != NULL) {
+		R.head = new GLNode;
+		R.head->tag = head->tag;
+		if (head->tag == ATOM) {
+			R.head->atom = head->atom;
 		}
 		else {
-			R.ptr->atom = ptr->atom;
+			GLNode *pNextR = R.head;
+			while (pNext != NULL) {
+				pNext->CopyGList(*pNextR);
+				pNext = pNext->tail;
+				if (pNext != NULL) {
+					pNextR->tail = new GLNode;
+					pNextR->tail->tag = LIST;
+					pNextR = pNextR->tail;
+				}
+			}
 		}
 	}
+	else {
+		R.head = NULL;
+	}
+	//if (head == NULL) {
+	//	R.head = NULL;
+	//}
+	//else {
+	//	R.head = new GLNode;
+	//	R.tail = new GLNode;
+	//	R.head->tag = head->tag;
+	//	if (head->tag == LIST) {
+	//		head->CopyGList(*R.head);
+	//		tail->CopyGList(*R.tail);			
+	//	}
+	//	else {
+	//		R.head->atom =head->atom;
+	//	}
+	//}
 }
-int GList::GListLength()
+int GLNode::GListLength()
 {
 	int iLen = 0;
-	GLNode *Gtemp = ptr;
+	GLNode *Gtemp = head;
 	while (Gtemp) {
 		Gtemp = Gtemp->tail;
 		iLen++;
 	}
 	return iLen;
 }
-int GList::GListDepth() {
+int GLNode::GListDepth() {
 	int iDepth = 0, iMax = 0;
 	GList Gnext,Gtail;
-	Gnext.ptr = Gtail.ptr = ptr;
-	if (ptr == NULL) {
+	Gnext.head = Gtail.head = head;
+	if (head == NULL) {
 		return 1;
 	}
-	else if (ptr->tag == ATOM) {
+	else if (head->tag == ATOM) {
 		return 0;
 	}
-	while (Gtail.ptr != NULL) {
-		Gnext.ptr = Gtail.ptr->head;
+	while (Gtail.head != NULL) {
+		Gnext.head = Gtail.head->head;
 		iMax = Gnext.GListDepth();
 		if (iMax > iDepth)
 			iDepth = iMax;
-		Gtail.ptr = Gtail.ptr->tail;
+		Gtail.head = Gtail.head->tail;
 	}
 	return iDepth + 1;
 }
-Status GList::GListEmpty()
+Status GLNode::GListEmpty()
 {
-	if (ptr == NULL)
+	if (head == NULL)
 		return TRUE;
 	else
 		return FALSE;
 }
-GList GList::GetHead()
+GList GLNode::GetHead()
 {
 	GList R,Gtemp;
-	if (ptr == NULL) {
-		R.ptr = NULL;
+	if (head == NULL) {
+		R.head = NULL;
 	}
 	else {
-		Gtemp.ptr = ptr->head;
+		head->CopyGList(R);
+	}
+	return R;
+}
+GList GLNode::GetTail()
+{
+	GList R,Gtemp;
+	if (head == NULL) {
+		R.head = NULL;
+	}
+	else {
+		Gtemp.head = head->tail;
 		Gtemp.CopyGList(R);
 	}
 	return R;
 }
-GList GList::GetTail()
-{
-	GList R,Gtemp;
-	if (ptr == NULL) {
-		R.ptr = NULL;
-	}
-	else {
-		Gtemp.ptr = ptr->tail;
-		Gtemp.CopyGList(R);
-	}
-	return R;
-}
-void GList::InsertFirst_GL(GList elem)
+void GLNode::InsertFirst_GL(GList elem)
 {
 	GList Gtemp;
-	Gtemp.ptr = new GLNode;
-	Gtemp.ptr->tag = LIST;
-	Gtemp.ptr->head = elem.ptr;
-	Gtemp.ptr->tail = ptr;
-	ptr = Gtemp.ptr;
+	Gtemp.head = new GLNode;
+	Gtemp.head->tag = LIST;
+	Gtemp.head->head = elem.head;
+	Gtemp.head->tail = head;
+	head = Gtemp.head;
 }
-void GList::DeleteFirst_GL(GList &elem)
+void GLNode::DeleteFirst_GL(GList &elem)
 {
 	GList Gtemp;
-	Gtemp.ptr = ptr->head;
+	Gtemp.head = head->head;
 	Gtemp.CopyGList(elem);
-	ptr = ptr->tail;
+	head = head->tail;
 }
-void GList::Traverse_GL(void(*func)(AtomType atom))
+void GLNode::Traverse_GL(void(*func)(AtomType atom))
 {
-	GList Ghead, Gtail;
-	if (ptr != NULL) {
-		if (ptr->tag == ATOM) {
-			func(ptr->atom);
+	GLNode *pNext = head;
+	if (head != NULL) {
+		if (head->tag == ATOM) {
+			func(head->atom);
 		}
 		else {
-			Ghead.ptr = ptr->head;
-			Gtail.ptr = ptr->tail;
-			Ghead.Traverse_GL(func);
-			Gtail.Traverse_GL(func);
+			while (pNext!=NULL)	{		
+				pNext->Traverse_GL(func);
+				pNext = pNext->tail;
+			}
 		}
 	}
-}
-GList::GList()
-{
-	ptr = NULL;
 }
 
 void sever(SString &str, SString &hstr)
@@ -389,8 +618,4 @@ void sever(SString &str, SString &hstr)
 		hstr.StrCopy(str);
 		str.ClearString();
 	}
-}
-void visit(AtomType elem)
-{
-	cout << elem << ends;
 }
