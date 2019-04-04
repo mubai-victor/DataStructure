@@ -5,7 +5,7 @@
 #define DestroyString ClearString
 #define MAX_SIZE 100
 
-enum ElemTag { ATOM, LIST, HEAD };
+enum ElemTag { ATOM, LIST };
 
 
 class SString {
@@ -33,32 +33,37 @@ public:
 void sever(SString &str, SString &hstr);
 void visit(AtomType elem);
 
-class GLNode;
-typedef GLNode GList;
-
 class GLNode {
 public:
 	ElemTag tag;
 	union {
 		AtomType atom;
 		GLNode *head;
-		};
+	};
 	GLNode *next;
-public:
 	GLNode();
+};
+class GList{
+private:
+	GLNode *head;
+	void _CreateGList(GLNode *&node,SString str);
+	void _DestroyGList(GLNode *&node);
+	void _CopyGList(GLNode *sre, GLNode *&des);
+	int _GListDepth(GLNode *node);
+	void _Traverse_GL(GLNode * node, void(*func)(AtomType elem));
+public:
+	GList();
 	void CreateGList(char* FileName);
-	void CreateListSub(SString str);
 	void DestroyGList();
-	void CopyGList(GList &R);
+	void CopyGList(GList &L);
+	void GetHead(GList &L);
+	void GetTail(GList &L);
 	int GListLength();
 	int GListDepth();
 	Status GListEmpty();
-	GList GetHead();
-	GList GetTail();
-	void InsertFirst_GL(GList elem);
-	void DeleteFirst_GL(GList &elem);
-	void Traverse_GL(void(*func)(AtomType atom));
-
+	void InsertFirst_GL(GList &L);
+	void DeleteFirst_GL(GList &L);
+	void Traverse_GL(void (*func)(AtomType elem));
 };
 #endif
 

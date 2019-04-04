@@ -26,11 +26,11 @@ int main()
 	printf("遍历广义表m： \n");
 	m.Traverse_GL(visit);
 	m.DestroyGList();
-	m = l.GetHead();
+	m.GetHead(l);
 	printf("\nm是l的表头元素，遍历m： \n");
 	m.Traverse_GL(visit);
 	m.DestroyGList();
-	m = l.GetTail();
+	m.GetTail(l);
 	printf("\nm是由l的表尾形成的广义表，遍历广义表m： \n");
 	m.Traverse_GL(visit);
 	m.InsertFirst_GL(l);

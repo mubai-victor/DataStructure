@@ -167,20 +167,136 @@ void SString::StrPrint()
 
 GLNode::GLNode()
 {
-	head = next = NULL;
+	tag = LIST;
+	head = NULL;
+	next = NULL;
 }
 
-
-void visit(AtomType elem)
+GList::GList()
 {
-	cout << elem << ends;
+	head = NULL;
 }
-void GLNode::CreateGList(char* FileName)
+
+//void GList::CreateGList(char* FileName)
+//{
+//	int iPos = 1;
+//	FILE*pF = NULL;
+//	errno_t status;
+//	SString Sstr,Ssub,Sbracket;
+//	GLNode *Gtemp = NULL;
+//	status = fopen_s(&pF, FileName, "r");
+//	if (status != 0) {
+//		cout << "无法打开文件" << FileName << endl;
+//		exit(0);
+//	}
+//	fgets(buf, MAX_SIZE, pF);
+//	buf[strlen(buf) - 1] = '\0';
+//	Sstr.StrAssign(buf);
+//	_CreateGList(head,Sstr);
+//	fclose(pF);
+//}
+
+void GList::_CreateGList(GLNode *&node, SString str)
+{
+	SString SBracket, Substr, HSubstr;
+	GLNode *Gptr = NULL;
+	SBracket.StrAssign("()");
+	node = new GLNode;
+	if (!str.StrCompare(SBracket)) {
+		node->tag = LIST;
+		node->head = NULL;
+	}
+	else if (str.StrLength() == 1) {
+		node->tag = ATOM;
+		node->atom = str.str[0];
+		node->next = NULL;
+	}
+	else {
+		node->tag = LIST;
+		node->head = NULL;
+		node->next = NULL;
+		str.SubString(Substr, 2, str.StrLength() - 2);
+		sever(Substr, HSubstr);
+		_CreateGList(node->head, HSubstr);
+		Gptr = node->head;
+		while (!Substr.StrEmpty()) {
+			sever(Substr, HSubstr);
+			_CreateGList(Gptr->next, HSubstr);
+			Gptr = Gptr->next;
+		}
+	}
+}
+void GList::_DestroyGList(GLNode *&node)
+{
+	GLNode *pGhead = NULL, *pGnext = NULL;
+	if (node != NULL) {
+		if (node->tag == ATOM) {
+			pGhead = NULL;
+		}
+		else {
+			pGhead = node->head;
+		}
+		pGnext = node->next;
+		_DestroyGList(pGnext);
+		_DestroyGList(pGhead);
+		delete node;
+		node = NULL;
+	}
+}
+void GList::_CopyGList(GLNode *src, GLNode *&des)
+{
+	if (src != NULL) {
+		des = new GLNode;
+		des->tag = src->tag;
+		if (src->tag == ATOM) {
+			des->atom = src->atom;
+		}
+		else {
+			_CopyGList(src->head, des->head);		
+		}
+		_CopyGList(src->next, des->next);
+	}
+	else {
+		des = NULL;
+	}
+}
+int GList::_GListDepth(GLNode *node)
+{
+	int length = 0, max = 0;
+	GLNode *pGtemp = NULL;
+	if (node == NULL || (node->tag == LIST&&node->head == NULL))
+		return 1;
+	else if (node->tag == ATOM)
+		return 0;
+
+	pGtemp = node->head;
+	while (pGtemp != NULL) {
+		length = _GListDepth(pGtemp);
+		if (length > max)
+			max = length;
+		pGtemp = pGtemp->next;
+	}
+	return max + 1;
+}
+void GList::_Traverse_GL(GLNode * node, void(*func)(AtomType elem))
+{
+	if ((node == NULL))
+		return;
+	if (node->tag == ATOM) {
+		func(node->atom);		
+	}
+	else {
+		_Traverse_GL(node->head,func);
+	}
+	_Traverse_GL(node->next, func);
+}
+
+void GList::CreateGList(char* FileName)
 {
 	int iPos = 1;
 	FILE*pF = NULL;
 	errno_t status;
-	SString Sstr,Ssub,Sbracket;
+	SString Sstr, Ssub, Sbracket;
 	GLNode *Gtemp = NULL;
 	status = fopen_s(&pF, FileName, "r");
 	if (status != 0) {
@@ -190,8 +306,86 @@ void GLNode::CreateGList(char* FileName)
 	fgets(buf, MAX_SIZE, pF);
 	buf[strlen(buf) - 1] = '\0';
 	Sstr.StrAssign(buf);
-	CreateListSub(Sstr);
+	_CreateGList(head, Sstr);
 	fclose(pF);
+}
+void GList::DestroyGList()
+{
+	_DestroyGList(head);
+}
+void GList::CopyGList(GList &L)
+{
+	_CopyGList(head, L.head);
+}
+void GList::GetHead(GList &L)
+{
+	GLNode *pGtemp = NULL;
+	if (L.head==NULL||(L.head->head==NULL&&L.head->tag == LIST)) {
+		head = NULL;
+		return;
+	}
+	pGtemp = L.head->head->next;
+	L.head->head->next = NULL;
+	_CopyGList(L.head, head);
+	L.head->head->next = pGtemp;
+}
+void GList::GetTail(GList &L)
+{
+	GLNode *pGtemp = NULL;
+	if (L.head == NULL || (L.head->tag == LIST&&L.head->head == NULL)) {
+		head = NULL;
+		return;
+	}
+	pGtemp = L.head->head;
+	L.head->head = pGtemp->next;
+	_CopyGList(L.head, head);
+	L.head->head = pGtemp;
+}
+int GList::GListLength()
+{
+	if (head == NULL)
+		return 0;
+	GLNode *pGtemp = head->head;	
+	int iCount = 0;
+	for (; pGtemp != NULL; iCount++, pGtemp = pGtemp->next);
+	return iCount;
+}
+int GList::GListDepth()
+{
+	return _GListDepth(head);
+}
+Status GList::GListEmpty()
+{
+	if (head == NULL || (head->tag == LIST&&head->next == NULL))
+		return	TRUE;
+	else
+		return	FALSE;
+}
+void GList::InsertFirst_GL(GList &L)
+{
+	GLNode *pGtemp = NULL;
+	pGtemp = head->head;
+//	head->head = L.head;
+	_CopyGList(L.head, head->head);
+	head->head->next = pGtemp;
+}
+void GList::DeleteFirst_GL(GList &L)
+{
+	if (head == NULL || (head->tag == LIST&&head->head == NULL))
+		return;
+	GLNode *pGtemp = NULL;
+	pGtemp = head->head;
+	head->head = head->head->next;
+	L.head = pGtemp;
+}
+void GList::Traverse_GL(void(*func)(AtomType elem))
+{
+	_Traverse_GL(head, func);
+}
+
+void visit(AtomType elem)
+{
+	cout << elem << ends;
 }
 
 void sever(SString &str, SString &hstr)
