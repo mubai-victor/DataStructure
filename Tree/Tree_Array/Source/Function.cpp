@@ -93,19 +93,25 @@ void print(QElemType i)
 void Tree::_PreTraverse(int pos, void(*func)(TElemType elem))
 {
 	func(tree[pos]);
-	_PreTraverse(2 * pos + 1, func);
-	_PreTraverse(2 * pos + 2, func);
+	if (tree[2 * pos + 1] != Nil)
+		_PreTraverse(2 * pos + 1, func);
+	if (tree[2 * pos + 2] != Nil)
+		_PreTraverse(2 * pos + 2, func);
 }
 void Tree::_InTraverse(int pos, void(*func)(TElemType elem))
 {
-	_PreTraverse(2 * pos + 1, func);
+	if(tree[2 * pos + 1]!=Nil)
+		_InTraverse(2 * pos + 1, func);
 	func(tree[pos]);
-	_PreTraverse(2 * pos + 2, func);
+	if (tree[2 * pos + 2] != Nil)
+		_InTraverse(2 * pos + 2, func);
 }
 void Tree::_PostTraverse(int pos, void(*func)(TElemType elem))
 {
-	_PreTraverse(2 * pos + 1, func);
-	_PreTraverse(2 * pos + 2, func);
+	if (tree[2 * pos + 1] != Nil)
+		_PostTraverse(2 * pos + 1, func);
+	if (tree[2 * pos + 2] != Nil)
+		_PostTraverse(2 * pos + 2, func);
 	func(tree[pos]);
 }
 
@@ -119,24 +125,31 @@ void Tree::InitBiTree()
 	for (int i = 0; i < MAX_TREE_SIZE; i++)
 		tree[i] = Nil;
 }
-void Tree::CreateBiTree()
+void Tree::CreateBiTree(char* FileName)
 {
 	errno_t status = 0;
 	FILE*pF = NULL;
-	TElemType TEbuf[MAX_TREE_SIZE];
+	char TEbuf[MAX_TREE_SIZE];
+	char*pcur = NULL;
 	int length = 0, pos = 0;
-	status = fopen_s(&pF, "Tree_Array.txt", "w");
+	status = fopen_s(&pF, FileName, "r");
 	if (status != 0) {
 		cout << "无法打开文件。" << endl;
 		exit(0);
 	}
-	while (fgets(TEbuf, MAX_TREE_SIZE, pF) != NULL) {
+//	fgets(TEbuf, MAX_TREE_SIZE, pF);
+	while (fgets(TEbuf, MAX_TREE_SIZE, pF),!feof(pF)) {
 		length = strlen(TEbuf);
-		for (int i = 0; i < length - 1; i++) {
-			tree[pos++] = TEbuf[i];
+		pcur = TEbuf;
+		while(1) {
+			tree[pos++] = atoi(pcur);
+			pcur = strchr(pcur, ' ');
+			if (pcur == NULL)
+				break;
+			pcur = pcur + 1;
 		}
 	}
-	pos--;
+	fclose(pF);
 }
 Status Tree::BiTreeEmpty()
 {
@@ -226,16 +239,155 @@ TElemType Tree::RightChild(TElemType value)
 		if (tree[pos] == value)
 			break;
 	}
-
+	if (pos == MAX_TREE_SIZE) {
+		return Nil;
+	}
+	else if (pos * 2 + 2 > MAX_TREE_SIZE) {
+		return Nil;
+	}
+	else {
+		return tree[2 * pos + 2];
+	}
 }
-TElemType Tree::LeftSibling(TElemType value);
-TElemType Tree::RightSibling(TElemType value);
-void Tree::Move(int pos_src, Tree &R, int pos_des);
-void Tree::InsertChild(TElemType elem, int LR, Tree &R);
-Status Tree::DeleteChild(int pos, int LR);
-void Tree::PreOrderTraverse(void(*func)(TElemType elem));
-void Tree::InOrderTraverse(void(*func)(TElemType elem));
-void Tree::PostTraverse(void(*func)(TElemType elem));
-void Tree::LevelOrderTraverse(void(*func)(TElemType elem));
-void Tree::Print();
+TElemType Tree::LeftSibling(TElemType value)
+{
+	if (BiTreeEmpty()) {
+		return Nil;
+	}
+	int pos = 0;
+	for (; pos < MAX_TREE_SIZE; pos++) {
+		if (tree[pos] == value)
+			break;
+	}
+	if (pos == MAX_TREE_SIZE) {
+		return Nil;
+	}
+	else if (pos % 2 == 1) {
+		return Nil;
+	}
+	else {
+		return tree[pos - 1];
+	}
+}
+TElemType Tree::RightSibling(TElemType value)
+{
+	if (BiTreeEmpty()) {
+		return Nil;
+	}
+	int pos = 0;
+	for (; pos < MAX_TREE_SIZE; pos++) {
+		if (tree[pos] == value)
+			break;
+	}
+	if (pos == MAX_TREE_SIZE) {
+		return Nil;
+	}
+	else if (pos % 2 == 0 || pos + 1 >= MAX_TREE_SIZE) {
+		return Nil;
+	}
+	else {
+		return tree[pos + 1];
+	}
+}
+void Tree::Move(int pos_src, Tree &R, int pos_des)
+{
+	if (tree[2 * pos_src + 1] != Nil) {
+		Move(2 * pos_src + 1, R, 2 * pos_des + 1);
+	}
+	if (tree[2 * pos_src + 2] != Nil) {
+		Move(2 * pos_src + 2, R, 2 * pos_des + 2);
+	}
+	R.tree[pos_des] = tree[pos_src];
+	tree[pos_src] = Nil;
+}
+void Tree::InsertChild(TElemType elem, int LR, Tree &R)
+{
+	//初始条件：当前二叉树存在， p是当前二叉树中某个结点的值， LR为0或1，非空二叉树R与当前不相交且右子树为空
+	//操作结果:根据LR为0或1,插入R为T中elem结点的左或右子树。 elem结点的原有左或右子树则成为R的右子树
+	int pos = 0, insert_pos = 0;
+	for (; pos < MAX_TREE_SIZE; pos++) {
+		if (tree[pos] == elem)
+			break;
+	}
+	insert_pos = 2 * pos + 1 + LR;
+	if(tree[insert_pos]!=Nil)
+		Move(insert_pos, R, 2);
+	R.Move(0,*this,insert_pos);
+}
+Status Tree::DeleteChild(position pos, int LR)
+{
+	int Ipos = int(pow(2, pos.level - 1)) + pos.order - 2;
+	Status flag = OK;
+	if (tree[Ipos] == Nil) {
+		return ERROR;
+	}
+	else if (tree[2 * Ipos + 1 + LR] == Nil) {
+		return OK;
+	}
+	else {
+		LinkQueue Q;
+		QElemType Qelem;
+		InitQueue(Q);
+		Ipos = 2 * Ipos + 1 + LR;
+		while (flag == OK) {
+			if (tree[2 * Ipos + 1] != Nil) {
+				EnQueue(Q, 2 * Ipos + 1);
+			}
+			if (tree[2 * Ipos + 2] != Nil) {
+				EnQueue(Q, 2 * Ipos + 2);
+			}
+			tree[Ipos] = Nil;
+			flag=DeQueue(Q, Ipos);
+		}
+	}
+}
+void Tree::PreOrderTraverse(void(*func)(TElemType elem))
+{
+	if(tree[0]!=Nil)
+		_PreTraverse(0, func);
+}
+void Tree::InOrderTraverse(void(*func)(TElemType elem))
+{
+	if(tree[0]!=Nil)
+		_InTraverse(0, func);
+	cout << endl;
+}
+void Tree::PostOrderTraverse(void(*func)(TElemType elem))
+{
+	if(tree[0]!=Nil)
+		_PostTraverse(0, func);
+	cout << endl;
+}
+void Tree::LevelOrderTraverse(void(*func)(TElemType elem))
+{
+	int depth = BiTreeDepth();
+	for (int i = 0; i<int(pow(2, depth)) - 1; i++) {
+		if (tree[i] != Nil) {
+			func(tree[i]);
+		}
+	}
+	cout << endl;
+}
+void Tree::Print()
+{
+	int depth = BiTreeDepth();
+	position pos;
+	TElemType elem;
+	for (int i = 1; i <= depth; i++) {
+		for (int j = 1; j <= int(pow(2, i - 1)); j++) {
+			pos.level=i;
+			pos.order=j;
+			elem=Value(pos);
+			if (elem != Nil) {
+				cout<<elem<<ends;
+			}
+		}
+		cout<<endl;
+	}
+}
+
+void visit(TElemType elem)
+{
+	cout << elem << ends;
+}
 

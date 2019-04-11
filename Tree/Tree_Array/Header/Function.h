@@ -39,7 +39,7 @@ private:
 public:
 	Tree();
 	void InitBiTree();
-	void CreateBiTree();
+	void CreateBiTree(char* FileName);
 	Status BiTreeEmpty();
 	int BiTreeDepth();
 	Status Root(TElemType &elem);
@@ -52,10 +52,10 @@ public:
 	TElemType RightSibling(TElemType value);
 	void Move(int pos_src, Tree &R, int pos_des);
 	void InsertChild(TElemType elem, int LR, Tree &R);
-	Status DeleteChild(int pos, int LR);
+	Status DeleteChild(position pos, int LR);
 	void PreOrderTraverse(void(*func)(TElemType elem));
 	void InOrderTraverse(void(*func)(TElemType elem));
-	void PostTraverse(void(*func)(TElemType elem));
+	void PostOrderTraverse(void(*func)(TElemType elem));
 	void LevelOrderTraverse(void(*func)(TElemType elem));
 	void Print();
 };

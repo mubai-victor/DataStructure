@@ -24,13 +24,11 @@ typedef int Status; // Status是函数的类型,其值是函数结果状态代码，如OK等
 typedef int QElemType;
 
 
-#if CHAR
-typedef char TElemType;
-#define Nil ' '
-#else
+
+
 typedef int TElemType;
 #define Nil 0
-#endif
+
 
 
 #endif
