@@ -51,7 +51,7 @@ struct BiTNode {
 class Tree {
 private:
 	BiTNode *tree;
-	void _DestroyBiTree(BiTNode*pnode);
+	void _DestroyBiTree(BiTNode*&pnode);
 	void _PreOrderTraverse(BiTNode*pnode, void(*func)(TElemType elem));
 	void _InOrderTraverse(BiTNode*pnode, void(*func)(TElemType elem));
 	void _PostOrderTraverse(BiTNode*pnode, void(*func)(TElemType elem));
@@ -74,11 +74,11 @@ public:
 	TElemType RightChild(TElemType elem);
 	TElemType LeftSibling(TElemType elem);
 	TElemType RightSibling(TElemType elem);
-	Status InsertChild(BiTNode*pnode);
-	Status DeleteChild(BiTNode*pnode);
+	Status InsertChild(BiTNode*pchild, int LR, BiTNode*pparent);
+	Status DeleteChild(BiTNode*pnode, int LR);
 	void InOrderTraverse1(void(*func)(TElemType elem));
 	void InOrderTraverse2(void(*func)(TElemType elem));
-	void PostTraverse(void(*func)(TElemType elem));
+	void PostOrderTraverse(void(*func)(TElemType elem));
 	void LevelOrderTraverse(void(*func)(TElemType elem));
 };
 void visit(TElemType elem);

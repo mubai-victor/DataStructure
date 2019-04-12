@@ -73,8 +73,15 @@ Status DeQueue(LinkQueue &q, QElemType &elem) {
 		return ERROR;
 	QueuePtr p = q.front->next;
 	elem = p->data;
-	q.front->next = p->next;
+	if (q.front->next == q.rear) {
+		q.rear = q.front;
+		q.front->next = NULL;
+	}
+	else {
+		q.front->next = p->next;
+	}
 	free(p);
+	p = NULL;
 	return OK;
 }
 void QueueTraverse(LinkQueue q, void(*func)(QElemType elem))
@@ -84,10 +91,6 @@ void QueueTraverse(LinkQueue q, void(*func)(QElemType elem))
 		func(p->data);
 		p = p->next;
 	}
-}
-void print(QElemType i)
-{
-	printf("%d\t", i);
 }
 
 void InitStack(SqStack&S)
@@ -154,7 +157,7 @@ void StackTraverse(SqStack&S, void(*func)(SElemType selem))
 	printf("\n");
 }
 
-void Tree::_DestroyBiTree(BiTNode*pnode)//destroy the tree
+void Tree::_DestroyBiTree(BiTNode*&pnode)//destroy the tree
 {
 	if (pnode != NULL) {
 		_DestroyBiTree(pnode->right);
@@ -189,7 +192,7 @@ void Tree::_PostOrderTraverse(BiTNode*pnode, void(*func)(TElemType elem))
 }
 void Tree::_CreateBiTree(BiTNode*&pnode, char*&buf)
 {
-	if (buf[0] == '\0') {
+	if (buf[0] != '\0') {
 		if (buf[0] != ' ') {
 			pnode = new BiTNode;
 			pnode->data = buf[0];
@@ -199,6 +202,9 @@ void Tree::_CreateBiTree(BiTNode*&pnode, char*&buf)
 		else {
 			pnode = NULL;
 		}
+	}
+	else {
+		pnode = NULL;
 	}
 }
 int Tree::_BiTreeDepth(BiTNode*pnode)//return the depth of the sub-tree.
@@ -262,25 +268,205 @@ TElemType Tree::Value(BiTNode*pnode)
 {
 	return pnode->data;
 }
-void Tree::Assign(BiTNode*pnode,TElemType value)
+void Tree::Assign(BiTNode*pnode,TElemType value)//assign the value of the node pointed by pnode with parameter value.
 {
 	pnode->data = value;
 }
-TElemType Tree::Parent(TElemType elem)
+TElemType Tree::Parent(TElemType elem)//return the parent node of the elem
 {
-
+	if (BiTreeEmpty())
+		return Nil;
+	LinkQueue Q;
+	BiTNode *pnode = NULL;
+	InitQueue(Q);
+	EnQueue(Q, tree);
+	while (!QueueEmpty(Q)) {
+		DeQueue(Q, pnode);
+		if (pnode->right&&pnode->right->data == elem || pnode->left&&pnode->left->data == elem)
+			return pnode->data;
+		else {
+			if (pnode->left != NULL) {
+				EnQueue(Q, pnode->left);
+			}
+			if (pnode->right != NULL) {
+				EnQueue(Q, pnode->right);
+			}
+		}
+	}
+	return Nil;
 }
-BiTNode *Tree::Point(TElemType elem);
-TElemType Tree::LeftChild(TElemType elem);
-TElemType Tree::RightChild(TElemType elem);
-TElemType Tree::LeftSibling(TElemType elem);
-TElemType Tree::RightSibling(TElemType elem);
-Status Tree::InsertChild(BiTNode*pnode);
-Status Tree::DeleteChild(BiTNode*pnode);
-void Tree::InOrderTraverse1(void(*func)(TElemType elem));
-void Tree::InOrderTraverse2(void(*func)(TElemType elem));
-void Tree::PostTraverse(void(*func)(TElemType elem));
-void Tree::LevelOrderTraverse(void(*func)(TElemType elem));
+BiTNode *Tree::Point(TElemType elem)//return the poiner of the node which the value if paramter value.
+{
+	if (!BiTreeEmpty()) {
+		LinkQueue Q;
+		BiTNode *pnode = NULL;
+		InitQueue(Q);
+		EnQueue(Q, tree);
+		while (!QueueEmpty(Q)) {
+			DeQueue(Q, pnode);
+			if (pnode->data == elem)
+				return pnode;
+			else {
+				if (pnode->left != NULL) {
+					EnQueue(Q, pnode->left);
+				}
+				if (pnode->right != NULL) {
+					EnQueue(Q, pnode->right);
+				}
+			}
+		}
+	}
+	return NULL;
+}
+TElemType Tree::LeftChild(TElemType elem)
+{
+	BiTNode *pnode = NULL;
+	if (!BiTreeEmpty()) {
+		pnode = Point(elem);
+		if (pnode != NULL&&pnode->left != NULL) {
+			return pnode->left->data;
+		}
+	}
+	return Nil;
+}
+TElemType Tree::RightChild(TElemType elem)
+{
+	BiTNode *pnode = NULL;
+	if (!BiTreeEmpty()) {
+		pnode = Point(elem);
+		if (pnode != NULL&&pnode->right != NULL) {
+			return pnode->right->data;
+		}
+	}
+	return Nil;
+}
+TElemType Tree::LeftSibling(TElemType elem)
+{
+	TElemType Tparent;
+	BiTNode*pnode=NULL;
+	if (!BiTreeEmpty()) {
+		Tparent = Parent(elem);
+		if (Tparent != Nil) {
+			pnode = Point(Tparent);
+			if (pnode != NULL&&pnode->left != NULL&&pnode->left->data != elem) {
+				return pnode->left->data;
+			}
+		}
+	}
+	return Nil;
+}
+TElemType Tree::RightSibling(TElemType elem)
+{
+	TElemType Tparent;
+	BiTNode*pnode=NULL;
+	if (!BiTreeEmpty()) {
+		Tparent = Parent(elem);
+		if (Tparent != Nil) {
+			pnode = Point(Tparent);
+			if (pnode != NULL&&pnode->right != NULL&&pnode->right->data != elem) {
+				return pnode->right->data;
+			}
+		}
+	}
+	return Nil;
+}
+Status Tree::InsertChild(BiTNode*pparent,int LR,BiTNode*pchild)
+{//insert pchild into the pparent as the left sub-tree(LR=0) or right sub-tree(LR=1),the origin sub-tree of pparent become the right sub-tree of the pchild.
+	if (pparent != NULL) {
+		if (pchild != NULL) {
+			if (LR == 1) {
+				pchild->right = pparent->right;
+				pparent->right = pchild;
+			}
+			else {
+				pchild->right = pparent->left;
+				pparent->left = pchild;
+			}
+		}
+		return OK;
+	}
+	return ERROR;
+}
+Status Tree::DeleteChild(BiTNode*pnode,int LR)
+{//According the value of LR,delete the left sub-tree(LR=0) or right sub-tree(LR=1) of the pnode.
+	if (pnode != NULL) {
+		if (LR == 0) {
+			_DestroyBiTree(pnode->left);
+		}
+		else {
+			_DestroyBiTree(pnode->right);
+		}
+		return OK;
+	}
+	else {
+		return ERROR;
+	}
+}
+void Tree::InOrderTraverse1(void(*func)(TElemType elem))
+{//visit the value of the tree in in-order,algorithm 1.
+	if (!BiTreeEmpty()) {
+		SqStack S;
+		BiTNode*pnode = NULL;
+		InitStack(S);
+		Push(S, tree);
+		while (!StackEmpty(S)) {
+			while (GetTop(S, pnode)&&pnode != NULL) {
+				Push(S,pnode->left);
+			}
+			Pop(S, pnode);
+			if (!StackEmpty(S)) {
+				Pop(S, pnode);
+				visit(pnode->data);
+				Push(S,pnode->right);
+			}
+		}
+		cout << endl;
+	}
+}
+void Tree::InOrderTraverse2(void(*func)(TElemType elem))
+{
+	if (!BiTreeEmpty()) {
+		SqStack S;
+		InitStack(S);
+		BiTNode *pnode = tree;
+		while (pnode != NULL || !StackEmpty(S)) {
+			if (pnode != NULL) {
+				Push(S, pnode);
+				pnode = pnode->left;
+			}
+			else {
+				Pop(S, pnode);
+				visit(pnode->data);
+				pnode = pnode->right;
+			}
+		}
+		cout << endl;
+	}
+}
+void Tree::PostOrderTraverse(void(*func)(TElemType elem))
+{
+	_PostOrderTraverse(tree, func);
+}
+void Tree::LevelOrderTraverse(void(*func)(TElemType elem))
+{
+	if (!BiTreeEmpty()) {
+		LinkQueue Q;
+		BiTNode *pnode = NULL;
+		InitQueue(Q);
+		EnQueue(Q, tree);
+		while (!QueueEmpty(Q)) {
+			DeQueue(Q, pnode);
+			visit(pnode->data);
+			if (pnode->left != NULL) {
+				EnQueue(Q, pnode->left);
+			}
+			if (pnode->right != NULL) {
+				EnQueue(Q, pnode->right);
+			}
+		}
+		cout << endl;
+	}
+}
 
 void visit(TElemType elem)
 {
