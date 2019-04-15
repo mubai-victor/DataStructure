@@ -157,6 +157,11 @@ void StackTraverse(SqStack&S, void(*func)(SElemType selem))
 	printf("\n");
 }
 
+BiTNode::BiTNode()
+{
+	left = right = parent = NULL;
+}
+
 void Tree::_DestroyBiTree(BiTNode*&pnode)//destroy the tree
 {
 	if (pnode != NULL) {
@@ -197,7 +202,13 @@ void Tree::_CreateBiTree(BiTNode*&pnode, char*&buf)
 			pnode = new BiTNode;
 			pnode->data = buf[0];
 			_CreateBiTree(pnode->left, ++buf);
+			if (pnode->left != NULL) {
+				pnode->left->parent = pnode;
+			}
 			_CreateBiTree(pnode->right, ++buf);
+			if (pnode->right != NULL) {
+				pnode->right->parent = pnode;
+			}
 		}
 		else {
 			pnode = NULL;
@@ -274,22 +285,12 @@ void Tree::Assign(BiTNode*pnode,TElemType value)//assign the value of the node p
 }
 TElemType Tree::Parent(TElemType elem)//return the parent node of the elem
 {
-	if (BiTreeEmpty())
-		return Nil;
-	LinkQueue Q;
-	BiTNode *pnode = NULL;
-	InitQueue(Q);
-	EnQueue(Q, tree);
-	while (!QueueEmpty(Q)) {
-		DeQueue(Q, pnode);
-		if (pnode->right&&pnode->right->data == elem || pnode->left&&pnode->left->data == elem)
-			return pnode->data;
-		else {
-			if (pnode->left != NULL) {
-				EnQueue(Q, pnode->left);
-			}
-			if (pnode->right != NULL) {
-				EnQueue(Q, pnode->right);
+	if (!BiTreeEmpty()) {
+		if (tree->data != elem) {
+			BiTNode*pnode = NULL;
+			pnode = Point(elem);
+			if (pnode != NULL) {
+				return pnode->parent->data;
 			}
 		}
 	}
@@ -376,10 +377,17 @@ Status Tree::InsertChild(BiTNode*pparent,int LR,BiTNode*pchild)
 		if (pchild != NULL) {
 			if (LR == 1) {
 				pchild->right = pparent->right;
+				if (pchild->right != NULL) {
+					pchild->right->parent = pchild;
+				}
 				pparent->right = pchild;
+				pchild->parent = pparent;
 			}
 			else {
 				pchild->right = pparent->left;
+				if (pchild->right != NULL) {
+					pchild->right->parent = pchild;
+				}
 				pparent->left = pchild;
 			}
 		}

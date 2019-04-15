@@ -46,7 +46,8 @@ struct position {
 };
 struct BiTNode {
 	TElemType data;
-	BiTNode *right, *left;
+	BiTNode *right, *left, *parent;
+	BiTNode();
 };
 class Tree {
 private:
