@@ -79,6 +79,7 @@ public:
 	void InOrderTraverse1(void(*func)(TElemType elem));
 	void InOrderTraverse2(void(*func)(TElemType elem));
 	void PostOrderTraverse(void(*func)(TElemType elem));
+	void PostOrderTraverse2(void(*func)(TElemType elem));
 	void LevelOrderTraverse(void(*func)(TElemType elem));
 };
 void visit(TElemType elem);

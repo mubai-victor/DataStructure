@@ -403,7 +403,7 @@ Status Tree::DeleteChild(BiTNode*pnode,int LR)
 	}
 }
 void Tree::InOrderTraverse1(void(*func)(TElemType elem))
-{//visit the value of the tree in in-order,algorithm 1.
+{//visit the value of the tree in in-order way,algorithm 1.
 	if (!BiTreeEmpty()) {
 		SqStack S;
 		BiTNode*pnode = NULL;
@@ -446,6 +446,32 @@ void Tree::InOrderTraverse2(void(*func)(TElemType elem))
 void Tree::PostOrderTraverse(void(*func)(TElemType elem))
 {
 	_PostOrderTraverse(tree, func);
+}
+void Tree::PostOrderTraverse2(void(*func)(TElemType elem))
+{
+	if (!BiTreeEmpty()) {
+		SqStack S;
+		BiTNode*pnode = NULL;
+		InitStack(S);
+		Push(S, tree);
+		while (!StackEmpty(S)) {
+			while (GetTop(S, pnode) && pnode != NULL) {
+				Push(S, pnode->left);
+				if (pnode->left == NULL) {
+					Pop(S, pnode);
+					GetTop(S, pnode);
+					Push(S,pnode->right);
+				}
+			}
+			Pop(S, pnode);
+			if (!StackEmpty(S)) {
+				Pop(S, pnode);
+				visit(pnode->data);
+				Push(S, Point(RightSibling(pnode->data)));
+			}
+		}
+		cout << endl;
+	}
 }
 void Tree::LevelOrderTraverse(void(*func)(TElemType elem))
 {

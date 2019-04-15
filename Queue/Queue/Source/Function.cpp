@@ -70,8 +70,15 @@ Status DeQueue(LinkQueue &q, QElemType &elem) {
 		return ERROR;
 	QueuePtr p = q.front->next;
 	elem = p->data;
-	q.front->next = p->next;
+	if (q.front->next == q.rear) {
+		q.rear = q.front;
+		q.front->next = NULL;
+	}
+	else {
+		q.front->next = p->next;
+	}
 	free(p);
+	p = NULL;
 	return OK;
 }
 void QueueTraverse(LinkQueue q, void(*func)(QElemType elem))

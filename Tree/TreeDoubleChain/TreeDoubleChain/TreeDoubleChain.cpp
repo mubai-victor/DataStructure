@@ -29,9 +29,11 @@ int main()
 	T.InOrderTraverse(visit);
 	printf("\n后序递归遍历二叉树:\n");
 	T.PostOrderTraverse(visit);
+	cout << endl << "后序遍历二叉树，第二种方式。" << endl;
+	T.PostOrderTraverse2(visit);
 	//printf("\n层序遍历二叉树:\n");
 	//T.LevelOrderTraverse(visit);
-	printf("\n请输入一个结点的值: ");
+	printf("请输入一个结点的值: ");
 	cin >> e1;
 	p = T.Point(e1); // p为e1的指针
 	printf("结点的值为%c\n", T.Value(p));
