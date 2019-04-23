@@ -37,7 +37,41 @@ void Push(SqStack&S, SElemType selem);
 Status Pop(SqStack&s, SElemType&selem);
 void StackTraverse(SqStack&S, void(*func)(SElemType selem));
 
+#define ClearTree DestroyTree;
 
+class Node {
+public:
+	TElemType data;
+	Node*firstchild, *nextsibling;
+	Node();
+};
+class CSTree {
+private:
+	Node*tree;
+	void _PreOrderTraverse(Node*node,void (*func)(TElemType elem));
+	void _DestroyTree(Node*&node);
+	int _TreeDepth(Node*node);
+	void _PostOrderTraverse(Node*node,void (*func)(TElemType elem));
+public:
+	CSTree();
+	void PreOrderTraverse(void (*func)(TElemType elem));
+	void InitTree();
+	void DestroyTree();
+	void CreateTree(char*FileName);
+	Status TreeEmpty();
+	int TreeDepth();
+	TElemType Value(Node*node);
+	TElemType Root();
+	Node* Point(TElemType elem);
+	Status Assign(TElemType OriginElem, TElemType CurElem);
+	TElemType LeftChild(TElemType elem);
+	TElemType Parent(TElemType elem);
+	TElemType RightSibling(TElemType elem);
+	Status InsertChild(Node*node,int i,CSTree T);
+	Status DeleteChild(Node*node,int i);
+	void PostOrderTraverse(void (*func)(TElemType elem));
+	void LevelOrderTraverse(void (*func)(TElemType elem));
+};
 void visit(TElemType elem);
 
 #endif

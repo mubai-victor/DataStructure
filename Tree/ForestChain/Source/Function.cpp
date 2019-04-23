@@ -157,7 +157,307 @@ void StackTraverse(SqStack&S, void(*func)(SElemType selem))
 	printf("\n");
 }
 
+Node::Node()
+{
+	data = Nil;
+	firstchild = NULL;
+	nextsibling = NULL;
+}
 
+
+void CSTree::_PreOrderTraverse(Node*node, void(*func)(TElemType elem))
+{
+	func(node->data);
+	if (node->firstchild != NULL) {
+		_PreOrderTraverse(node->firstchild,func);
+	}
+	if (node->nextsibling) {
+		_PreOrderTraverse(node->nextsibling,func);
+	}
+}
+void CSTree::_DestroyTree(Node*&node)
+{
+	if (node != NULL) {
+		if (node->firstchild != NULL) {
+			_DestroyTree(node->firstchild);
+		}
+		if (node->nextsibling != NULL) {
+			_DestroyTree(node->nextsibling);
+		}
+		free(node);
+		node = NULL;
+	}
+}
+int CSTree::_TreeDepth(Node*node)
+{
+	if (node != NULL) {
+		int iDepth = 0, iMax = 1;
+		if (node->firstchild == NULL) {
+			return 1;
+		}
+		else {
+			node = node->firstchild;
+			while (node != NULL) {
+				iDepth = _TreeDepth(node);
+				if (iDepth > iMax) {
+					iMax = iDepth;
+				}
+				node = node->nextsibling;
+			}
+		}
+		return iMax + 1;
+	}
+	return 0;
+}
+void CSTree::_PostOrderTraverse(Node*node, void(*func)(TElemType elem))
+{
+	if (node != NULL) {
+		_PostOrderTraverse(node->firstchild, func);
+		func(node->data);
+		_PostOrderTraverse(node->nextsibling, func);
+
+	}
+}
+CSTree::CSTree()
+{
+	tree = NULL;
+}
+void CSTree::PreOrderTraverse(void(*func)(TElemType elem))
+{
+	if (!TreeEmpty()) {
+		_PreOrderTraverse(tree,func);
+	}
+}
+void CSTree::InitTree()
+{
+	tree = NULL;
+}
+void CSTree::DestroyTree()
+{
+	_DestroyTree(tree);
+}
+void CSTree::CreateTree(char*FileName)
+{
+	FILE*pF = NULL;
+	char arrcBuf[MAX_BUF_SIZE], *pcBuf = NULL;
+	Node*pNChild = NULL;
+	if (fopen_s(&pF, FileName, "r") != 0) {
+		cout << "Can not open file." << endl;
+		exit(0);
+	}
+	LinkQueue Q;
+	InitQueue(Q);
+	if (fgets(arrcBuf, MAX_BUF_SIZE,pF)) {
+		tree = new Node;
+		tree->data = arrcBuf[0];
+		EnQueue(Q,tree);
+	}
+	while (fgets(arrcBuf, MAX_BUF_SIZE, pF)) {
+		pcBuf = arrcBuf;
+		while (pcBuf[0] != '\n' && !QueueEmpty(Q)) {
+			DeQueue(Q,pNChild);
+			if (pcBuf[0] != ' ') {
+				pNChild->firstchild = new Node;
+				pNChild->firstchild->data = pcBuf[0];
+				EnQueue(Q, pNChild->firstchild);
+				pcBuf++;
+				pNChild = pNChild->firstchild;
+			}		
+			while (pcBuf[0] != Nil&&pcBuf[0] != '\n') {
+				pNChild->nextsibling = new Node;
+				EnQueue(Q,pNChild->nextsibling);
+				pNChild->nextsibling->data = pcBuf[0];
+				pNChild = pNChild->nextsibling;
+				pcBuf++;
+			}
+			if (pcBuf[0] == Nil) {
+				pcBuf++;
+				if (pcBuf[0] == Nil&&(pcBuf - arrcBuf) % 2 == 1) {
+					pcBuf++;
+				}
+			}
+		}
+	}
+}
+Status CSTree::TreeEmpty()
+{
+	if (tree == NULL) {
+		return TRUE;
+	}
+	else {
+		return ERROR;
+	}
+}
+int CSTree::TreeDepth()
+{
+	return _TreeDepth(tree);
+}
+TElemType CSTree::Value(Node*node)
+{
+	return node->data;
+}
+TElemType CSTree::Root()
+{
+	if (!TreeEmpty()) {
+		return tree->data;
+	}
+	else {
+		return Nil;
+	}
+}
+Node* CSTree::Point(TElemType elem)
+{
+	if (!TreeEmpty()) {
+		LinkQueue Q;
+		Node*pnode = NULL;
+		InitQueue(Q);
+		EnQueue(Q, tree);
+		while (!QueueEmpty(Q)) {
+			DeQueue(Q, pnode);
+			if (pnode->data == elem) {
+				return pnode;
+			}
+			if (pnode->firstchild != NULL) {
+				EnQueue(Q, pnode->firstchild);
+				pnode = pnode->firstchild;
+			}
+			while (pnode->nextsibling != NULL) {
+				EnQueue(Q, pnode->nextsibling);
+				pnode = pnode->nextsibling;
+			}
+		}
+	}
+	return NULL;
+}
+Status CSTree::Assign(TElemType OriginElem, TElemType CurElem)
+{
+	Node*pnode = NULL;
+	pnode = Point(OriginElem);
+	if (pnode != NULL) {
+		pnode->data = CurElem;
+		return OK;
+	}
+	else {
+		return ERROR;
+	}
+}
+TElemType CSTree::LeftChild(TElemType elem)
+{
+	Node *pnode = NULL;
+	pnode = Point(elem);
+	if (pnode != NULL&&pnode->firstchild != NULL) {
+		return pnode->firstchild->data;
+	}
+	else {
+		return Nil;
+	}
+}
+TElemType CSTree::Parent(TElemType elem)
+{
+	if (!TreeEmpty()) {
+		LinkQueue Q;
+		Node*pnode = NULL, *pparent = NULL;
+		InitQueue(Q);
+		EnQueue(Q,tree);
+		while (!QueueEmpty(Q)) {
+			DeQueue(Q,pparent);
+			pnode = pparent->firstchild;
+			while (pnode != NULL) {
+				if (pnode->data == elem) {
+					return pparent->data;
+				}
+				else {
+					EnQueue(Q, pnode);
+				}
+				pnode = pnode->nextsibling;
+			}
+		}
+	}
+	return Nil;
+}
+TElemType CSTree::RightSibling(TElemType elem)
+{
+	Node*pnode = NULL;
+	pnode = Point(elem);
+	if (pnode != NULL&&pnode->nextsibling != NULL) {
+		return pnode->nextsibling->data;
+	}
+	else {
+		return Nil;
+	}
+}
+Status CSTree::InsertChild(Node*node, int i, CSTree T)
+{
+	if (!T.TreeEmpty()) {
+		Node*pnode = NULL;
+		if (i == 1) {
+			T.tree->nextsibling = node->firstchild;
+			node->firstchild = T.tree;
+			return OK;
+		}
+		else {
+			int j = 2;
+			pnode = tree->firstchild;
+			for (; pnode!=NULL&&pnode->nextsibling != NULL&&j < i; j++) {
+				pnode = pnode->nextsibling;
+			}
+			if (i == j) {
+				T.tree->nextsibling = pnode->nextsibling;
+				pnode->nextsibling = T.tree;
+			}
+		}
+	}
+	return ERROR;
+}
+Status CSTree::DeleteChild(Node*node, int i)
+{
+	if (node != NULL&&node->firstchild != NULL) {
+		Node*pnode = node->firstchild;
+		if (i == 1) {
+			node->firstchild = pnode->nextsibling;
+			pnode->nextsibling = NULL;
+			_DestroyTree(pnode);
+			return OK;
+		}
+		else {
+			for (int j = 2; j < i&&pnode->nextsibling != NULL; j++) {
+				pnode = pnode->nextsibling;
+			}
+			if (pnode->nextsibling != NULL) {
+				pnode->nextsibling = pnode->nextsibling->nextsibling;
+				pnode->nextsibling->nextsibling = NULL;
+				_DestroyTree(pnode->nextsibling);
+				return OK;
+			}
+		}
+	}
+	return ERROR;
+}
+void CSTree::PostOrderTraverse(void(*func)(TElemType elem))
+{
+	_PostOrderTraverse(tree, func);
+}
+void CSTree::LevelOrderTraverse(void(*func)(TElemType elem))
+{
+	if (!TreeEmpty()) {
+		LinkQueue Q;
+		Node*pnode = NULL;
+		InitQueue(Q);
+		EnQueue(Q, tree);
+		while (!QueueEmpty(Q)) {
+			DeQueue(Q, pnode);
+			func(pnode->data);
+			if (pnode->firstchild != NULL) {
+				EnQueue(Q, pnode->firstchild);
+				pnode = pnode->firstchild;
+				while (pnode->nextsibling != NULL) {
+					EnQueue(Q, pnode->nextsibling);
+					pnode = pnode->nextsibling;
+				}
+			}
+		}
+	}
+}
 
 void visit(TElemType elem)
 {
