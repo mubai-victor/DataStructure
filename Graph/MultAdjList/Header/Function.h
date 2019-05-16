@@ -7,28 +7,50 @@
 #define MAX_INFO 20
 #define MAX_BUF_SIZE 100
 
-#define VISITED 1
-#define UNVISITED 0
-
-#define FILEUDN "UDN.txt"
-#define FILEUDG "UDG.txt"
-#define FILEDG	"DG.txt"
-#define FILEDN	"DN.txt"
-
 typedef int VRType;
 typedef int QElemType;
 typedef int InfoType;
 typedef char VertexType[MAX_NAME];
-enum GraphKind { DG = 1, DN = 2, UDG = 3, UDN = 4 };
+enum VisitIf { UNVISITED, VISITED };
+struct EBox {
+	VisitIf mark;
+	int ivex, jvex;
+	EBox *ilink, *jlink;
+	InfoType *info;
+	EBox();
+};
+struct VexBox {
+	VertexType data;
+	EBox *firstedge;
+	VexBox();
+};
+class AMLGraph {
+private:
+	VisitIf mark[MAX_VERTEX_NUM];
+	VexBox vexs[MAX_VERTEX_NUM];
+	int vexnum, arcnum;
+public:
+	AMLGraph();
+	int LocateVex(VertexType vex);
+	void CreateGraph(char*file);
+	VertexType& GetVex(int pos);
+	Status PutVex(VertexType origin, VertexType value);
+	int FirstAdjVex(VertexType vex);
+	int NextAdjVex(VertexType center,VertexType next);
+	Status DeleteArc(VertexType vex1, VertexType vex2);
+	Status DeleteVex(VertexType vex);
+	void DestroyGraph();
+	Status InsertVex(VertexType vex);
+	Status InsertArc(VertexType vex1,VertexType vex2);
+	void DFS(int pos,void (*func)(VertexType));
+	void DFSTraverse(void (*func)(VertexType));
+	void BFSTraverse(void (*func)(VertexType));
+	void MarkUnvisited();
+	void Display();
+};
 
-
-Status equalvex(ElemType elem1, ElemType elem2);
 void visit(VertexType vex);
 Status GetSubStr(char *sub, char *&str);
-
-#define LNode ArcBox
-#define next tail
-typedef ArcBox *LinkList;
 
 typedef struct QNode {
 	QElemType data;
@@ -37,19 +59,6 @@ typedef struct QNode {
 struct LinkQueue {
 	QueuePtr rear, front;
 };
-
-
-
-void InitList(LinkList&L);
-void ClearList(LinkList&L);
-int ListLength(LinkList L);
-int LocateElem(LinkList L, ElemType elem, Status(*compare)(ElemType elem_a, ElemType elem_b));
-Status GetElem(LinkList L, int i, ElemType&elem);
-Status ListInsert(LinkList&L, int i, ElemType elem);
-Status ListDelete(LinkList&L, int i, ElemType &elem);
-Status ListEmpty(LinkList L);
-Status DeleteElem(LinkList&L, ElemType&elem, Status(*equal)(ElemType elem_a, ElemType elem_b));
-LinkList Point(LinkList L, ElemType elem, Status(*equal)(ElemType elem_a, ElemType elem_b), LinkList&p);
 
 void visit(VertexType vex);
 void InitQueue(LinkQueue &q);
