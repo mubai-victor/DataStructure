@@ -15,7 +15,7 @@ int main()
 	for (i = 0; i<4; i++) // 验证4种情况
 	{
 		g.CreateGraph(); // 构造图g
-		//g.Display(); // 输出图g
+		g.Display(); // 输出图g
 		//printf("插入新顶点，请输入顶点的值: ");
 		//cin >> v1;
 		//g.InsertVex(v1);
@@ -42,7 +42,11 @@ int main()
 		//cin >> v1;
 		//g.DeleteVex(v1);
 		//g.Display(); // 输出图g
+		cout << "DFS output the graph:";
 		g.DFSTraverse(visit);
+		g.PutVex("e", "E");
+		g.DeleteArc("a", "b");
+		cout << endl <<  "BFS output the graph;";
 		g.BFSTraverse(visit);
 	}
 	g.DestroyGraph(); // 销毁图g

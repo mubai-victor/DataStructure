@@ -29,16 +29,18 @@ int main()
 	//	g.InsertArc(v1, v2);
 	//}
 	//g.Display();
-	printf("删除一条边，请输入待删除边的两顶点(以空格作为间隔)：");
-	cin >> v1 >> v2;
-	g.DeleteArc(v1, v2);
-	g.Display();
-	printf("删除顶点及相关的边，请输入顶点的值: ");
-	cin >> v1;
-	g.DeleteVex(v1);
-	g.Display();
+	//printf("删除一条边，请输入待删除边的两顶点(以空格作为间隔)：");
+	//cin >> v1 >> v2;
+	//g.DeleteArc(v1, v2);
+	//g.Display();
+	//printf("删除顶点及相关的边，请输入顶点的值: ");
+	//cin >> v1;
+	//g.DeleteVex(v1);
+	//g.Display();
 	printf("深度优先搜索的结果:\n");
 	g.DFSTraverse(visit);
+	g.PutVex("e", "E");
+	g.DeleteArc("a", "b");
 	printf("广度优先搜索的结果:\n");
 	g.BFSTraverse(visit);
 	g.DestroyGraph();
