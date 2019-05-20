@@ -9,6 +9,7 @@ using namespace std;
 
 int main()
 {
+//	cout << INT_MAX + 1 << endl;
 	cALGraph h;
 	printf("请选择有向网\n");
 	h.CreateGraph(); // 构造有向网h，在bo7-2.cpp中
