@@ -26,6 +26,9 @@ void MGraph::ShortestPath_FLOYD()
 		}
 	}
 	for (int i = 0; i < vexnum; i++) {
+		distance[i][i] = 0;
+	}
+	for (int i = 0; i < vexnum; i++) {
 		for (int j = 0; j < vexnum; j++) {
 			for (int k = 0; k < vexnum; k++) {
 				if (arcs[i][k].adj < INT_MAX&&arcs[k][j].adj < INT_MAX&&arcs[i][k].adj + arcs[k][j].adj < distance[i][j]) {
@@ -48,9 +51,9 @@ void MGraph::PrintInfo()
 	cout << "The paths and distance are:" << endl;
 	for (int i = 0; i < vexnum; i++) {
 		for (int j = 0; j < vexnum; j++) {
-			if (i == j) {
-				continue;
-			}
+			//if (i == j) {
+			//	continue;
+			//}
 			cout << vexs[i] << "->" << vexs[j] << ":";
 			for (int k = 0; k < vexnum; k++) {
 				if (path[i][j][k] == TRUE) {
