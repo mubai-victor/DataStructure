@@ -165,16 +165,19 @@ void SString::StrPrint()
 	cout << endl;
 }
 
+
+
+
 GLNode::GLNode()
 {
-	head = tail = NULL;
+	status = UNVISITED;
 }
 
-void visit(AtomType elem)
+GList::GList()
 {
-	cout << elem << ends;
+	head = NULL;
 }
-void GLNode::CreateGList(char* FileName)
+void GList::CreateGList(char* FileName)
 {
 	int iPos = 1;
 	FILE*pF = NULL;
@@ -189,182 +192,134 @@ void GLNode::CreateGList(char* FileName)
 	fgets(buf, MAX_SIZE, pF);
 	buf[strlen(buf) - 1] = '\0';
 	Sstr.StrAssign(buf);
-	CreateListSub(Sstr);
+	_CreateList(Sstr,head);
 	fclose(pF);
 }
-void GLNode::CreateListSub(SString str)
+void GList::_CreateList(SString str,GLNode *&p)
 {
 	SString Ssub, Sbracket,Sstr;
 	GList Shead, Stail;
 	GLNode *Gtemp = NULL;
 	Sbracket.StrAssign("()");
 	if (!str.StrCompare(Sbracket)) {
-		head = NULL;
+		p = NULL;
 	}
 	else {		
-		head = new GLNode;
+		p = new GLNode;
 		if (str.StrLength() == 1) {
-			head->tag = ATOM;
-			head->atom = str.str[0];
+			p->tag = ATOM;
+			p->atom = str.str[0];
 		}
 		else {
-			head->tag = LIST;
-			Gtemp = head;
+			p->tag = LIST;
+			Gtemp = p;
 			str.SubString(Sstr, 2, str.StrLength() - 2); 
 			do {
 				sever(Sstr, Ssub);
-				Gtemp->CreateListSub(Ssub);
+				_CreateList(Ssub, Gtemp->ptr.head);
 				if (Sstr.StrLength() != 0) {
-					Gtemp->tail = new GLNode;
-					Gtemp = Gtemp->tail;
+					Gtemp->ptr.tail = new GLNode;
+					Gtemp = Gtemp->ptr.tail;
 					Gtemp->tag = LIST;
 				}
 			} while (Sstr.StrLength() != 0);
-			Gtemp->tail = NULL;
+			Gtemp->ptr.tail = NULL;
 		}
 	}
 }
-void GLNode::DestroyGList()
+void GList::_DestroyGList(GLNode *&p)
+{
+	if (p->tag == LIST) {
+		_DestroyGList(p->ptr.head);
+		if(p->ptr.tail != NULL)
+			_DestroyGList(p->ptr.tail);
+	}
+	delete head;
+	head = NULL;
+}
+void GList::DestroyGList()
 {
 	if (head != NULL) {
-		if (head->tag == LIST) {
-			head->DestroyGList();
-			if(tail != NULL)
-				tail->DestroyGList();
-		}
-		delete head;
-		head = NULL;
+		_DestroyGList(head);
 	}
 }
-void GLNode::CopyGList(GList &R)
+void GList::_Traverse_GL(GLNode * node, void(*func)(GLNode *p))
 {
-	GLNode *pNext = head; &R;
-	if (head != NULL) {
-		R.head = new GLNode;
-		R.head->tag = head->tag;
-		if (head->tag == ATOM) {
-			R.head->atom = head->atom;
+	if (node != NULL) {
+		if (node->tag == ATOM) {
+			func(node);
 		}
 		else {
-			GLNode *pNextR = R.head;
-			while (pNext != NULL) {
-				pNext->CopyGList(*pNextR);
-				pNext = pNext->tail;
-				if (pNext != NULL) {
-					pNextR->tail = new GLNode;
-					pNextR->tail->tag = LIST;
-					pNextR = pNextR->tail;
+			func(node);
+			_Traverse_GL(node->ptr.head, func);
+			_Traverse_GL(node->ptr.tail, func);
+		}
+	}
+}
+void GList::MarkList()
+{
+	if (head != NULL) {
+		GLNode *pFront = NULL, *pPresent = head, *pBack = NULL;
+		Status sFinished = FALSE;
+		while (sFinished == FALSE) {
+			while (pPresent->status == UNVISITED) {
+				pPresent->status = VISITED;
+				pBack = pPresent->ptr.head;
+				if (pBack != NULL&&pBack->status == UNVISITED) {
+					if (pBack->tag == ATOM) {
+						pBack->status = VISITED;
+					}
+					else {
+						pPresent->ptr.head = pFront;
+						pFront = pPresent;
+						pPresent->tag = ATOM;
+						pPresent = pBack;
+					}
+				}
+			}
+			pBack = pPresent->ptr.tail;
+			if (pBack != NULL&&pBack->status == UNVISITED) {
+				pPresent->ptr.tail = pFront;
+				pFront = pPresent;
+				pPresent = pBack;
+			}
+			else {
+				while (pFront != NULL&&pFront->tag == LIST) {
+					pBack = pFront;
+					pFront = pFront->ptr.tail;
+					pBack->ptr.tail = pPresent;
+					pPresent = pBack;
+				}
+				if (pFront == NULL) {
+					sFinished = TRUE;
+				}
+				else {
+					pBack = pFront;
+					pFront->tag = LIST;
+					pFront = pFront->ptr.head;
+					pBack->ptr.head = pPresent;
+					pPresent = pBack;
 				}
 			}
 		}
 	}
-	else {
-		R.head = NULL;
-	}
-	//if (head == NULL) {
-	//	R.head = NULL;
-	//}
-	//else {
-	//	R.head = new GLNode;
-	//	R.tail = new GLNode;
-	//	R.head->tag = head->tag;
-	//	if (head->tag == LIST) {
-	//		head->CopyGList(*R.head);
-	//		tail->CopyGList(*R.tail);			
-	//	}
-	//	else {
-	//		R.head->atom =head->atom;
-	//	}
-	//}
 }
-int GLNode::GListLength()
+void GList::Traverse_GL(void func(GLNode*elem))
 {
-	int iLen = 0;
-	GLNode *Gtemp = head;
-	while (Gtemp) {
-		Gtemp = Gtemp->tail;
-		iLen++;
-	}
-	return iLen;
-}
-int GLNode::GListDepth() {
-	int iDepth = 0, iMax = 0;
-	GList Gnext,Gtail;
-	Gnext.head = Gtail.head = head;
-	if (head == NULL) {
-		return 1;
-	}
-	else if (head->tag == ATOM) {
-		return 0;
-	}
-	while (Gtail.head != NULL) {
-		Gnext.head = Gtail.head->head;
-		iMax = Gnext.GListDepth();
-		if (iMax > iDepth)
-			iDepth = iMax;
-		Gtail.head = Gtail.head->tail;
-	}
-	return iDepth + 1;
-}
-Status GLNode::GListEmpty()
-{
-	if (head == NULL)
-		return TRUE;
-	else
-		return FALSE;
-}
-GList GLNode::GetHead()
-{
-	GList R,Gtemp;
-	if (head == NULL) {
-		R.head = NULL;
-	}
-	else {
-		head->CopyGList(R);
-	}
-	return R;
-}
-GList GLNode::GetTail()
-{
-	GList R,Gtemp;
-	if (head == NULL) {
-		R.head = NULL;
-	}
-	else {
-		Gtemp.head = head->tail;
-		Gtemp.CopyGList(R);
-	}
-	return R;
-}
-void GLNode::InsertFirst_GL(GList elem)
-{
-	GList Gtemp;
-	Gtemp.head = new GLNode;
-	Gtemp.head->tag = LIST;
-	Gtemp.head->head = elem.head;
-	Gtemp.head->tail = head;
-	head = Gtemp.head;
-}
-void GLNode::DeleteFirst_GL(GList &elem)
-{
-	GList Gtemp;
-	Gtemp.head = head->head;
-	Gtemp.CopyGList(elem);
-	head = head->tail;
-}
-void GLNode::Traverse_GL(void(*func)(AtomType atom))
-{
-	GLNode *pNext = head;
 	if (head != NULL) {
-		if (head->tag == ATOM) {
-			func(head->atom);
+		_Traverse_GL(head, print);
+	}
+}
+void print(GLNode *p)
+{
+	if (p != NULL) {
+		if (p->tag == ATOM) {
+			cout << "Type:ATOM " << "Value:" << p->atom;
 		}
 		else {
-			while (pNext!=NULL)	{		
-				pNext->Traverse_GL(func);
-				pNext = pNext->tail;
-			}
+			cout << "Type:List";
 		}
+		cout << " Status:" << ((p->status == VISITED) ? "VISITED" : "UNVISITED") << endl;
 	}
 }
 
