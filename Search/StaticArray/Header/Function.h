@@ -2,6 +2,16 @@
 #define _FUNCTION_
 #include "Test.h"
 
+#define ORDER
+
+#ifdef ORDER
+#define N 11
+typedef int KeyType;
+struct ElemType {
+	KeyType key;
+};
+
+#else
 typedef long KeyType;
 
 #define key number
@@ -21,6 +31,7 @@ struct ElemType // 数据元素类型(以教科书图9.1高考成绩为例)
 	int biology; // 生物
 	int total; // 总分
 };
+#endif
 class SStable {
 private:
 	ElemType *elem;

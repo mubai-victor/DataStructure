@@ -9,6 +9,22 @@ using namespace std;
 
 int main()
 {
+#ifdef ORDER
+	SStable st;
+	int i;
+	KeyType s;
+	ElemType r[N] = { 5,13,19,21,37,56,64,75,80,88,92 }; // 数据元素(以教科书第219页的数据为例)
+	st.Create_Ord(r, N); // 由全局数组产生非降序静态查找表st
+	st.Traverse(print); // 顺序输出非降序静态查找表st
+	printf("\n");
+	printf("请输入待查找值的关键字: ");
+	cin >> s;
+	i = st.Search_Bin(s); // 折半查找有序表
+	if (i)
+		st.Print(i, print);
+	else
+		printf("没找到\n");
+#else
 	ElemType r[N] = { { 179328,"何芳芳",85,89,98,100,93,80,47 },
 	{ 179325,"陈红",85,86,88,100,92,90,45 },
 	{ 179326,"陆华",78,75,90,80,95,88,37 },
@@ -31,6 +47,7 @@ int main()
 		st.Print(i, print);
 	else
 		printf("没找到\n");
+#endif
     return 0;
 }
 

@@ -25,7 +25,7 @@ void SStable::Ascend()
 	for (int i = 1; i <= length; i++) {
 		Min = elem[i];
 		iPos = i;
-		for (int j = i + 1; j < length; i++) {
+		for (int j = i + 1; j < length; j++) {
 			if (elem[j].key <= Min.key) {
 				Min = elem[j];
 				iPos = j;
@@ -56,17 +56,17 @@ int SStable::Search_Bin(KeyType key)
 			return iMid;
 		}
 		else if (elem[iMid].key < key) {
-			iLow = iMid - 1;
+			iLow = iMid + 1;
 		}
 		else {
-			iHigh = iMid + 1;
+			iHigh = iMid - 1;
 		}
 	}
 	return 0;
 }
 void SStable::Traverse(void(*Func)(ElemType elem))
 {
-	cout << "No  name  politics  Chinese  English  math  physics  chemistry  biology  total" << endl;
+	//cout << "No  name  politics  Chinese  English  math  physics  chemistry  biology  total" << endl;
 	for (int i = 1; i <= length; i++) {
 		Func(elem[i]);
 	}
@@ -75,7 +75,14 @@ void SStable::Print(int i, void(*Func)(ElemType elem))
 {
 	print(elem[i]);
 }
+#ifdef ORDER
+
+void print(ElemType elem) {
+	cout << elem.key << endl;
+}
+#else
 void print(ElemType elem)
 {
 	cout << elem.number << " " << elem.name << " " << elem.politics << " " << elem.Chinese << " " << elem.English << " " << elem.math << " " << elem.physics << " " << elem.chemistry << " " << elem.biology << " " << elem.total << endl;
 }
+#endif
