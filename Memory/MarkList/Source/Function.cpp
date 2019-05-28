@@ -283,6 +283,7 @@ void GList::MarkList()
 				pFront = pPresent;
 				pPresent = pBack;
 			}
+			//´Ó±íÎ²»ØËÝ
 			else {
 				while (pFront != NULL&&pFront->tag == LIST) {
 					pBack = pFront;
