@@ -52,7 +52,7 @@ void CreateLoserTree(LoserTree ls)
 	for (int i = 0; i < k; i++) {
 		ls[i] = k;
 	}
-	for (int i = k - 1; i >= 0; i--) {
+	for (int i = 0; i < k; i++) {
 		Adjust(ls, i);
 	}
 }
